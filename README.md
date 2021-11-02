@@ -1,4 +1,4 @@
-# dual_arm ros driver
+# dual_ur5e ros driver
 
 This driver enables controlling the dual UR5es in a ROS environment
 

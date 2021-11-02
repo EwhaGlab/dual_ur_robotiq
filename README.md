@@ -4,7 +4,7 @@ This driver enables controlling the dual UR5es in a ROS environment
 
 ## Getting Started
 
-Check out the --- to install --- and start to code
+Check out the [wiki]()
 
 ## License
 

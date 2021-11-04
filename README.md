@@ -1,6 +1,7 @@
 # dual_ur5e ros driver
 
-This driver enables controlling the dual UR5es in a ROS environment
+This repository provides our customized UR5e integration with robotiq 3 Finger gripper on UR_ROS_DRIVER and robotiq.
+
 
 ## Getting Started
 

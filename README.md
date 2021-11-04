@@ -1,4 +1,5 @@
 # dual_ur5e ros driver
+Tested on Ubuntu 18.04 with ROS Melodic.
 
 This repository provides our customized UR5e integration with robotiq 3 Finger gripper on UR_ROS_DRIVER and robotiq.
 

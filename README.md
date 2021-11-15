@@ -10,7 +10,7 @@ This repository provides our customized UR5e integration with robotiq 3 Finger g
 
 Check out the [wiki](https://github.com/yaesolKim/dual_ur5e/wiki)   
 
-urdf file: ~/ur_description/urdf/dual_ur5e_robot.urdf.xacro     
+urdf file: ~/dual_arm_description/urdf/dual_ur5e_robot.urdf.xacro     
 
 ## License
 

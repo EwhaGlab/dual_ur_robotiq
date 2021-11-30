@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<launch>
+
+  <!--Robot description and related parameter files -->
+  <arg name="robot_description_file" default="$(dirname)/inc/load_ur5e.launch.xml" doc="Launch file which populates the 'robot_description' parameter."/>
+  <arg name="joint_limit_params" default="$(find ur_description)/config/ur5e/joint_limits.yaml"/>
+  <arg name="kinematics_params" default="$(find ur_description)/config/ur5e/default_kinematics.yaml"/>
+  <arg name="physical_params" default="$(find ur_description)/config/ur5e/physical_parameters.yaml"/>
+  <arg name="visual_params" default="$(find ur_description)/config/ur5e/visual_parameters.yaml"/>
+
+  <!-- Controller configuration -->
+  <arg name="controller_config_file" default="$(find ur_gazebo)/config/ur5e_controllers.yaml" doc="Config file used for defining the ROS-Control controllers."/>
+  <arg name="controllers" default="joint_state_controller pos_joint_traj_controller" doc="Controllers that are activated by default."/>
+  <arg name="stopped_controllers" default="joint_group_pos_controller" doc="Controllers that are initally loaded, but not started."/>
+
+  <!-- robot_state_publisher configuration -->
+  <arg name="tf_prefix" default="" doc="tf_prefix used for the robot."/>
+  <arg name="tf_pub_rate" default="500" doc="Rate at which robot_state_publisher should publish transforms."/>
+
+  <!-- Gazebo parameters -->
+  <arg name="paused" default="false" doc="Starts Gazebo in paused mode" />
+  <arg name="gui" default="true" doc="Starts Gazebo gui" />
+
+  <!-- Load urdf on the parameter server -->
+  <include file="$(arg robot_description_file)">
+    <arg name="joint_limit_params" value="$(arg joint_limit_params)"/>
+    <arg name="kinematics_params" value="$(arg kinematics_params)"/>
+    <arg name="physical_params" value="$(arg physical_params)"/>
+    <arg name="visual_params" value="$(arg visual_params)"/>
+  </include>
+
+  <!-- Robot state publisher -->
+  <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
+    <param name="publish_frequency" type="double" value="$(arg tf_pub_rate)" />
+    <param name="tf_prefix" value="$(arg tf_prefix)" />
+  </node>
+
+  <!-- Start the 'driver' (ie: Gazebo in this case) -->
+  <include file="$(dirname)/inc/ur_control.launch.xml">
+    <arg name="controller_config_file" value="$(arg controller_config_file)"/>
+    <arg name="controllers" value="$(arg controllers)"/>
+    <arg name="gui" value="$(arg gui)"/>
+    <arg name="paused" value="$(arg paused)"/>
+    <arg name="stopped_controllers" value="$(arg stopped_controllers)"/>
+  </include>
+</launch>

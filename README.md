@@ -27,6 +27,11 @@ roslaunch dual_arm_moveit_config robot_moveit_planning_execution.launch sim:=tru
 roslaunch dual_arm_moveit_config moveit_rviz.launch config:=true
 ```   
 
+### Gripper
+```commandline
+rosrun robotiq_3f_gripper_control Robotiq3FGripperSimpleController.py  
+rosrun robotiq_3f_gripper_control Robotiq3FGripperStatusListener.py
+```
 
 ## Real robot control
 ### Single arm control

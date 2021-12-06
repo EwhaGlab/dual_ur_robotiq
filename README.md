@@ -13,8 +13,6 @@ This repository provides our customized UR5e integration with robotiq 3 Finger g
 The features and usage of the dual arm driver are described on the [WIKI](https://github.com/yaesolKim/dual_ur5e/wiki).   
 
 
-## License
-
 ## Contact
 
 All bug reports, feedback, comments, contributions or remarks are welcome.

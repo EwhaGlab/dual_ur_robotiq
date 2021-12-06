@@ -12,7 +12,7 @@ Tested on Ubuntu 18.04 with ROS Melodic.
 mkdir robot_ws && cd robot_ws && mkdir src
 catkin_init_workspace
 cd src
-git clone https://this_repository
+git clone https://github.com/yaesolKim/dual_ur_robotiq.git
 ```
 
 2. Install the dependencies

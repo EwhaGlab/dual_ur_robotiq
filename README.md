@@ -36,7 +36,9 @@ rosrun robotiq_3f_gripper_control Robotiq3FGripperStatusListener.py
 ## Real robot control
 ### Single arm control
 ```
---
+roslaunch ur_robot_driver right_ur5e_bringup.launch   
+roslaunch ur5e_moveit_config ur5e_moveit_planning_execution.launch   
+roslaunch ur5e_moveit_config moveit_rviz.launch config:=true   
 ```   
 
 ### Dual arm control

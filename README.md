@@ -12,37 +12,25 @@ Tested on Ubuntu 18.04 with ROS Melodic.
 - Mode: basic, pinch, wide scissor
 - Action: close, open   
 
-## Simulation: Run gazebo, moveit, Rviz
-### Single arm simulation
-```
-roslaunch ur_e_gazebo ur5e.launch
-roslaunch ur5_e_moveit_config ur5_e_moveit_planning_execution.launch sim:=true
-roslaunch ur5_e_moveit_config moveit_rviz.launch config:=true
-```   
-
-### Dual arm simulation
+## Simulation: Run gazebo, moveit, Rviz   
 ```
 roslaunch ur_e_gazebo dual_arm.launch
 roslaunch dual_arm_moveit_config robot_moveit_planning_execution.launch sim:=true
 roslaunch dual_arm_moveit_config moveit_rviz.launch config:=true
 ```   
 
+## Real robot execution: Bring up robot, Run moveit and Rviz   
+```commandline
+roslaunch ur_robot_driver dual_arm_bringup.launch   
+roslaunch dual_arm_moveit_config robot_moveit_planning_execution.launch     
+roslaunch dual_arm_moveit_config moveit_rviz.launch config:=true   
+```
+
 ### Gripper
 ```commandline
 rosrun robotiq_3f_gripper_control Robotiq3FGripperSimpleController.py  
 rosrun robotiq_3f_gripper_control Robotiq3FGripperStatusListener.py
 ```
-
-## Real robot control
-### Single arm control
-```
---
-```   
-
-### Dual arm control
-```
---
-```   
 
 
 ## Contact

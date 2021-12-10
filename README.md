@@ -32,6 +32,15 @@ rosrun robotiq_3f_gripper_control Robotiq3FGripperSimpleController.py
 rosrun robotiq_3f_gripper_control Robotiq3FGripperStatusListener.py
 ```
 
+### Gripper
+
+Run the lines below in the respective terminals.
+```
+roscore
+rosrun robotiq_3f_gripper_control Robotiq3FGripperTcpNode.py 192.168.1.12 //right arm
+rosrun robotiq_3f_gripper_joint_state_publisher robotiq_3f_gripper_joint_states right_
+roslaunch robotiq_3f_gripper_visualization robotiq_gripper_upload.launch
+```
 
 ## Contact
 All bug reports, feedback, comments, contributions or remarks are welcome.

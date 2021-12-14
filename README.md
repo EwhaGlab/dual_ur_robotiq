@@ -21,9 +21,13 @@ roslaunch dual_arm_moveit_config moveit_rviz.launch config:=true
 
 ## Real robot execution: Bring up robot, Run moveit and Rviz   
 ```commandline
-roslaunch ur_robot_driver dual_arm_bringup.launch   
+roslaunch ur_robot_driver dual_ur5e_bringup.launch   
 roslaunch dual_arm_moveit_config robot_moveit_planning_execution.launch     
 roslaunch dual_arm_moveit_config moveit_rviz.launch config:=true   
+-------------------------------------------------------------------------
+roslaunch ur_robot_driver left_ur5e_bringup.launch   
+roslaunch ur5e_moveit_config ur5e_moveit_planning_execution.launch   
+roslaunch ur5e_moveit_config moveit_rviz.launch config:=true  
 ```
 
 ### Gripper

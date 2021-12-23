@@ -8,9 +8,6 @@ Tested on Ubuntu 18.04 with ROS Melodic.
 
 ### The features and usage of the dual arm driver are described on the [WIKI](https://github.com/yaesolKim/dual_ur5e/wiki).   
 
-## Gripper 
-- Mode: basic, pinch, wide scissor
-- Action: close, open   
 
 ## Simulation: Run gazebo, moveit, Rviz   
 ```
@@ -19,31 +16,31 @@ roslaunch dual_arm_moveit_config robot_moveit_planning_execution.launch sim:=tru
 roslaunch dual_arm_moveit_config moveit_rviz.launch config:=true
 ```   
 
-## Real robot execution: Bring up robot, Run moveit and Rviz   
+## Real robot execution: Bring up grippers and robots, Run moveit and Rviz   
+Run the lines below in the respective terminals.
 ```commandline
+roscore
+roslaunch robotiq_3f_gripper_control dual_gripper_tcp.launch
+roslaunch robotiq_3f_gripper_joint_state_publisher dual_gripper_joint_state_publisher.launch
+roslaunch robotiq_3f_gripper_visualization robotiq_gripper_upload.launch
+
 roslaunch ur_robot_driver dual_ur5e_bringup.launch   
 roslaunch dual_arm_moveit_config robot_moveit_planning_execution.launch     
 roslaunch dual_arm_moveit_config moveit_rviz.launch config:=true   
+
 -------------------------------------------------------------------------
 roslaunch ur_robot_driver left_ur5e_bringup.launch   
 roslaunch ur5e_moveit_config ur5e_moveit_planning_execution.launch   
 roslaunch ur5e_moveit_config moveit_rviz.launch config:=true  
 ```
 
-### Gripper
+## Gripper 
+- Mode: basic, pinch, wide scissor
+- Action: close, open   
+
 ```commandline
 rosrun robotiq_3f_gripper_control Robotiq3FGripperSimpleController.py  
 rosrun robotiq_3f_gripper_control Robotiq3FGripperStatusListener.py
-```
-
-### Gripper
-
-Run the lines below in the respective terminals.
-```
-roscore
-rosrun robotiq_3f_gripper_control Robotiq3FGripperTcpNode.py 192.168.1.12 //right arm
-rosrun robotiq_3f_gripper_joint_state_publisher robotiq_3f_gripper_joint_states right_
-roslaunch robotiq_3f_gripper_visualization robotiq_gripper_upload.launch
 ```
 
 ## Contact

@@ -24,7 +24,7 @@ roslaunch robotiq_3f_gripper_control dual_gripper_tcp.launch
 roslaunch robotiq_3f_gripper_joint_state_publisher dual_gripper_joint_state_publisher.launch
 roslaunch robotiq_3f_gripper_visualization robotiq_gripper_upload.launch
 
-roslaunch ur_robot_driver dual_ur5e_bringup.launch   
+roslaunch ur_robot_driver dual_ur5e_bringup_two.launch   
 roslaunch dual_arm_moveit_config robot_moveit_planning_execution.launch     
 roslaunch dual_arm_moveit_config moveit_rviz.launch config:=true   
 

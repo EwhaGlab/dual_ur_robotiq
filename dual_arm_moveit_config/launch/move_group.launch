@@ -1,7 +1,4 @@
 <launch>
-  <arg name="limited" default="false"/>
-
-
 
   <!-- GDB Debug Option -->
   <arg name="debug" default="false" />
@@ -43,15 +40,12 @@
   <arg name="load_robot_description" default="true" />
   <!-- load URDF, SRDF and joint_limits configuration -->
   <include file="$(find dual_arm_moveit_config)/launch/planning_context.launch">
-   <!-- <arg name="limited" value="$(arg limited)" />-->
     <arg name="load_robot_description" value="$(arg load_robot_description)" />
   </include>
 
   <!-- Planning Functionality -->
   <include ns="move_group" file="$(find dual_arm_moveit_config)/launch/planning_pipeline.launch.xml">
     <arg name="pipeline" value="$(arg pipeline)" />
-    <param name="capabilities" value="$(arg capabilities)"/>
-    <param name="disable_capabilities" value="$(arg disable_capabilities)"/>
   </include>
 
   <!-- Trajectory Execution Functionality -->
@@ -74,6 +68,8 @@
     <param name="allow_trajectory_execution" value="$(arg allow_trajectory_execution)"/>
     <param name="max_safe_path_cost" value="$(arg max_safe_path_cost)"/>
     <param name="jiggle_fraction" value="$(arg jiggle_fraction)" />
+    <param name="capabilities" value="$(arg capabilities)"/>
+    <param name="disable_capabilities" value="$(arg disable_capabilities)"/>
 
 
     <!-- Publish the planning scene of the physical robot so that rviz plugin can know actual robot -->

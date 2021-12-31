@@ -3,10 +3,10 @@
        name="ur5e" >
 
   <!-- common stuff -->
-  <xacro:include filename="$(find ur_e_description)/urdf/common.gazebo.xacro" />
+  <xacro:include filename="$(find dual_ur_robotiq_description)/urdf/common.gazebo.xacro" />
 
   <!-- ur5e -->
-  <xacro:include filename="$(find ur_e_description)/urdf/ur5e.urdf.xacro" />
+  <xacro:include filename="$(find dual_ur_robotiq_description)/urdf/ur5e.urdf.xacro" />
 
   <!-- arm -->
   <xacro:ur5e_robot prefix="" joint_limited="false"/>

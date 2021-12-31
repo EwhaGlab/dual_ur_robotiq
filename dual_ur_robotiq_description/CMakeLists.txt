@@ -1,11 +1,11 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(ur_e_description)
+project(dual_ur_robotiq_description)
 
 find_package(catkin REQUIRED)
 
 catkin_package(
 #  INCLUDE_DIRS include
-#  LIBRARIES ur_e_description
+#  LIBRARIES dual_ur_robotiq_description
 #  CATKIN_DEPENDS urdf
 #  DEPENDS system_lib
 )

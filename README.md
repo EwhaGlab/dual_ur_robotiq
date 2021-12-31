@@ -15,6 +15,10 @@ roslaunch ur_e_gazebo dual_ur_robotiq.launch
 roslaunch dual_arm_moveit_config robot_moveit_planning_execution.launch sim:=true
 roslaunch dual_arm_moveit_config moveit_rviz.launch config:=true
 ```   
+## pick and place simulation
+```commandline
+rosrun pick_place pick_place_collision
+```
 
 ## Real robot execution: Bring up grippers and robots, Run moveit and Rviz   
 Run the lines below in the respective terminals.

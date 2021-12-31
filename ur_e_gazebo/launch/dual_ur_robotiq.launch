@@ -13,7 +13,7 @@
   </include>
 
   <!-- send robot urdf to param server -->
-  <include file="$(find ur_e_description)/launch/dual_arm_upload.launch">
+  <include file="$(find dual_ur_robotiq_description)/launch/dual_arm_upload.launch">
     <arg name="limited" value="$(arg limited)"/>
   </include>
 

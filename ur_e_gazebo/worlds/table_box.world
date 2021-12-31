@@ -1,5 +1,10 @@
 <sdf version='1.6'>
   <world name='default'>
+    <scene>
+      <ambient>0.6 0.6 0.6 1</ambient>
+      <background>0.25 0.25 0.25 1</background>
+      <shadows>0</shadows>
+    </scene>
     <light name='sun' type='directional'>
       <cast_shadows>1</cast_shadows>
       <pose frame=''>0 0 10 0 -0 0</pose>
@@ -89,7 +94,7 @@
     </scene>
     <gui fullscreen='0'>
       <camera name='user_camera'>
-        <pose frame=''>9.27739 -10.0587 3.95321 0 -0.044358 2.27618</pose>
+        <pose frame=''>-5.19697 2.38224 3.22872 -0 0.379642 -0.483815</pose>
         <view_controller>orbit</view_controller>
         <projection_type>perspective</projection_type>
       </camera>
@@ -108,10 +113,10 @@
       <heading_deg>0</heading_deg>
     </spherical_coordinates>
     <state world_name='default'>
-      <sim_time>266 638000000</sim_time>
-      <real_time>314 236124274</real_time>
-      <wall_time>1640874111 467228382</wall_time>
-      <iterations>230753</iterations>
+      <sim_time>319 856000000</sim_time>
+      <real_time>52 655675707</real_time>
+      <wall_time>1640927819 36193290</wall_time>
+      <iterations>31973</iterations>
       <model name='ground_plane'>
         <pose frame=''>0 0 0 0 -0 0</pose>
         <scale>1 1 1</scale>
@@ -133,29 +138,29 @@
         </link>
       </model>
       <model name='wood_cube_10cm'>
-        <pose frame=''>-0.725284 0.672766 1.0251 0 -0 0</pose>
+        <pose frame=''>-0.723563 0.672766 1.06399 3.14159 -1.57079 3.14159</pose>
         <scale>1 1 1</scale>
         <link name='link'>
-          <pose frame=''>-0.725284 0.672766 1.0751 0 -0 0</pose>
+          <pose frame=''>-0.773563 0.672766 1.06399 3.14159 -1.57079 3.14159</pose>
           <velocity>0 0 0 0 -0 0</velocity>
-          <acceleration>-0 -0 -0 0 -0 0</acceleration>
-          <wrench>-0 -0 -0 0 -0 0</wrench>
+          <acceleration>-0 0 -0 0 -0 0</acceleration>
+          <wrench>-0 0 -0 0 -0 0</wrench>
         </link>
       </model>
       <model name='wooden_case'>
-        <pose frame=''>-0.970443 -0.012836 1.09383 -3.13755 -1.57069 2.2e-05</pose>
+        <pose frame=''>-0.970457 -0.012837 1.07745 0 -1.57069 -3.13753</pose>
         <scale>1 1 1</scale>
         <link name='base'>
-          <pose frame=''>-0.946444 -0.012739 1.09383 -3.13755 -1.57069 2.2e-05</pose>
-          <velocity>2e-06 0 8.8e-05 0 1.9e-05 0</velocity>
-          <acceleration>-0 -0 0 0 -0 0</acceleration>
-          <wrench>-0 -0 0 0 -0 0</wrench>
+          <pose frame=''>-0.946457 -0.012739 1.07745 0 -1.57069 -3.13753</pose>
+          <velocity>3e-06 0 6.5e-05 0 5e-05 0</velocity>
+          <acceleration>0 0 0 0 -0 0</acceleration>
+          <wrench>0 0 0 0 -0 0</wrench>
         </link>
         <link name='lid'>
-          <pose frame=''>-1.04724 -0.013149 1.30427 -1e-06 -1.0473 -3.13752</pose>
-          <velocity>2e-06 -0 7.7e-05 0 1.7e-05 0</velocity>
-          <acceleration>-0 -0 -0 0 -0 0</acceleration>
-          <wrench>-0 -0 -0 0 -0 0</wrench>
+          <pose frame=''>-1.0473 -0.013149 1.28787 0 -1.04709 -3.13753</pose>
+          <velocity>1.3e-05 0 6.8e-05 0 4.9e-05 0</velocity>
+          <acceleration>-0 0 0 0 -0 0</acceleration>
+          <wrench>-0 0 0 0 -0 0</wrench>
         </link>
       </model>
       <light name='sun'>

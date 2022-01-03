@@ -1,8 +1,14 @@
 #include <ros/ros.h>
 #include <moveit/move_group_interface/move_group_interface.h>
 #include <moveit/planning_scene_interface/planning_scene_interface.h>
+
+#include <moveit_msgs/DisplayRobotState.h>
+#include <moveit_msgs/DisplayTrajectory.h>
+
 #include <moveit_msgs/AttachedCollisionObject.h>
 #include <moveit_msgs/CollisionObject.h>
+#include <moveit_msgs/ApplyPlanningScene.h>
+
 #include <moveit_visual_tools/moveit_visual_tools.h>
 
 int main(int argc, char** argv)
@@ -51,6 +57,8 @@ int main(int argc, char** argv)
 
     moveit::planning_interface::MoveGroupInterface::Plan my_plan;
 
+    visual_tools.prompt("Press 'next' in the RvizVisualToolsGui window to start the demo");
+
     // 1. Move to home position
     move_group_interface_arm.setJointValueTarget(move_group_interface_arm.getNamedTargetValues("left_arm_zero"));
 
@@ -62,8 +70,7 @@ int main(int argc, char** argv)
 
     visual_tools.publishText(text_pose, "move left arm zero pose", rvt::WHITE, rvt::XLARGE);
     visual_tools.trigger();
-    visual_tools.prompt("next step");
-    ros::Duration(2.0).sleep();
+    visual_tools.prompt("Press 'next' in the RvizVisualToolsGui window to continue the demo");
 
     // 1-2. Add Collision object
     moveit_msgs::CollisionObject collision_object;
@@ -72,10 +79,10 @@ int main(int argc, char** argv)
     collision_object.id = "table";
     shape_msgs::SolidPrimitive primitive;
     primitive.type = primitive.BOX;
-    primitive.dimensions.resize(1);
+    primitive.dimensions.resize(10);
     primitive.dimensions[primitive.BOX_X] = 0.1;
-    primitive.dimensions[primitive.BOX_Y] = 0.1;
-    primitive.dimensions[primitive.BOX_Z] = 0.1;
+    primitive.dimensions[primitive.BOX_Y] = 0.3;
+    primitive.dimensions[primitive.BOX_Z] = 0.5;
 
     geometry_msgs::Pose table_pose;
     table_pose.orientation.w = 1.0;
@@ -91,14 +98,14 @@ int main(int argc, char** argv)
     collision_objects.push_back(collision_object);
 
     ROS_INFO_NAMED("tutorial", "Add an object into the world");
-    planning_scene_interface.applyCollisionObjects(collision_objects);
-    //planning_scene_interface.addCollisionObjects(collision_objects);
+    //planning_scene_interface.applyCollisionObjects(collision_objects);
+    planning_scene_interface.addCollisionObjects(collision_objects);
 
     visual_tools.publishText(text_pose, "Add object", rvt::WHITE, rvt::XLARGE);
     visual_tools.trigger();
     visual_tools.prompt("Press 'next' in the RvizVisualToolsGui window to once the collision object appears in RViz");
 
-    // 2. Place the TCP (Tool Center Point, the tip of the robot) above the blue box
+    // 2. Place the TCP (Tool Center Point, the tip of the robot) above the wood box
     geometry_msgs::PoseStamped current_pose;
     current_pose = move_group_interface_arm.getCurrentPose("left_ee_link");
 
@@ -115,23 +122,26 @@ int main(int argc, char** argv)
 
     std::cout << "current position: " << current_pose.pose.position.x << ", " << current_pose.pose.position.y << ", " <<current_pose.pose.position.z << std::endl;
 
-    target_pose1.orientation = box_pose.orientation;
+    target_pose1 = current_pose.pose;
+    //target_pose1.orientation = box_pose.orientation;
     target_pose1.position.x = box_pose.position.x;
     target_pose1.position.y = box_pose.position.y;
-    target_pose1.position.z = box_pose.position.z + 0.5;
+    //target_pose1.position.z = box_pose.position.z + 0.5;
 
     move_group_interface_arm.setPoseTarget(target_pose1);
 
     success = (move_group_interface_arm.plan(my_plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
-
     ROS_INFO_NAMED("tutorial", "Visualizing plan 1 (pose goal) %s", success ? "" : "FAILED");
+    visual_tools.trigger();
+    visual_tools.prompt("Press 'next' in the RvizVisualToolsGui window once the plan is complete and then it will move the arm");
 
     move_group_interface_arm.move();
 
 
-    moveit::planning_interface::MoveGroupInterface::Plan my_plan_gripper;
 
     // 3. Open the gripper
+    moveit::planning_interface::MoveGroupInterface::Plan my_plan_gripper;
+
     move_group_interface_gripper.setJointValueTarget(move_group_interface_gripper.getNamedTargetValues("open"));
 
     success = (move_group_interface_gripper.plan(my_plan_gripper) == moveit::planning_interface::MoveItErrorCode::SUCCESS);

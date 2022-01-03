@@ -12,9 +12,14 @@
         args="$(arg command_args)" output="screen">
   </node>
 -->
+<!--
   <node name="$(anon rviz)" launch-prefix="$(arg launch_prefix)" pkg="rviz" type="rviz" respawn="false"
         args="-d $(find dual_arm_moveit_config)/launch/moveit.rviz" output="screen">
   </node>
+-->
 
+<node name="$(anon rviz)" launch-prefix="$(arg launch_prefix)" pkg="rviz" type="rviz" respawn="false"
+        args="-d $(find pick_place)/src/moveit.rviz" output="screen">
+  </node>
 
 </launch>

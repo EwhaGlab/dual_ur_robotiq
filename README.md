@@ -12,8 +12,8 @@ Tested on Ubuntu 18.04 with ROS Melodic.
 ## Simulation: Run gazebo, moveit, Rviz   
 ```
 roslaunch ur_e_gazebo dual_ur_robotiq.launch
-roslaunch dual_arm_moveit_config robot_moveit_planning_execution.launch sim:=true
-roslaunch dual_arm_moveit_config moveit_rviz.launch config:=true
+roslaunch robot_moveit_config robot_moveit_planning_execution.launch sim:=true
+roslaunch robot_moveit_config moveit_rviz.launch config:=true
 ```   
 ## pick and place simulation
 ```commandline

@@ -32,8 +32,7 @@ int main(int argc, char** argv)
   // The :planning_interface:`MoveGroupInterface` class can be easily
   // setup using just the name of the planning group you would like to control and plan for.
   moveit::planning_interface::MoveGroupInterface rightArm(PLANNING_GROUP_ARM);
-//  moveit::planning_interface::MoveGroupInterface move_group_interface_gripper(PLANNING_GROUP_GRIPPER);
-
+  moveit::planning_interface::MoveGroupInterface move_group_interface_gripper(PLANNING_GROUP_GRIPPER);
   moveit::planning_interface::PlanningSceneInterface planning_scene_interface;
   bool success;
 
@@ -76,6 +75,9 @@ int main(int argc, char** argv)
     visual_tools.prompt("Press 'next' to continue the demo");
 
     // 1-2. Add Collision object
+    // add table
+    std::vector<moveit_msgs::CollisionObject> collision_objects;
+
     moveit_msgs::CollisionObject collision_object;
     collision_object.header.frame_id = rightArm.getPlanningFrame();
     collision_object.id = "table";
@@ -84,57 +86,52 @@ int main(int argc, char** argv)
     collision_object.primitives.push_back(primitive);
     collision_object.primitive_poses.push_back(table_pose);
     collision_object.operation = collision_object.ADD;
-    std::vector<moveit_msgs::CollisionObject> collision_objects;
     collision_objects.push_back(collision_object);
 
     ROS_INFO_NAMED("tutorial", "Add a table into the world");
     //planning_scene_interface.applyCollisionObjects(collision_objects);
+
+    // add block
+    moveit_msgs::CollisionObject object_to_attach;
+    object_to_attach.header.frame_id = rightArm.getPlanningFrame();
+    object_to_attach.id = "block";
+    primitive = setPrim(3, 0.07, 0.07, 0.07);
+    geometry_msgs::Pose block_pose = setGeomPose(-0.764824, 0.734106, 1.00, 0.0, 0.7071068, 0, 0.7071068);
+    object_to_attach.primitives.push_back(primitive);
+    object_to_attach.primitive_poses.push_back(block_pose);
+    object_to_attach.operation = object_to_attach.ADD;
+    collision_objects.push_back(object_to_attach);
+
     planning_scene_interface.addCollisionObjects(collision_objects);
-
-
 
     visual_tools.publishText(text_pose, "Add table", rvt::WHITE, rvt::XLARGE);
     visual_tools.trigger();
-    visual_tools.prompt("Press 'next' in the RvizVisualToolsGui window to once the collision object appears in RViz");
+    visual_tools.prompt("Press 'next' in the RvizVisualToolsGui window to once the table appears in RViz");
 
-    // 2. Place the TCP (Tool Center Point, the tip of the robot) above the wood block
-    //geometry_msgs::Pose block_pose = setGeomPose(-0.667293, 0.851811, 1.89202, 0.705267, 0.500933, 0.501662, 0.00057026);
-    //geometry_msgs::Pose block_pose = setGeomPose(-0.667202, 0.851797, 1.89217, 0.0718204, 0.903355, 0.419434, 0.0535302);
-    //geometry_msgs::Pose block_pose = setGeomPose(-0.764928, 0.870651, 1.8415, 0.0699283, 0.966766, -0.0941535, 0.227177);
-    //geometry_msgs::Pose block_pose = setGeomPose(-0.764824, 0.734106, 1.26638, -0.000938594, 0.721022, -0.00562801, 0.692889); //pre-pre grasp
-    geometry_msgs::Pose block_pose = setGeomPose(-0.764824, 0.734106, 1.26638, 0.0, 0.7071068, 0, 0.7071068); //pre-pre grasp2
-    //geometry_msgs::Pose block_pose = setGeomPose(-0.743945, 0.721829, 1.03214, 0.00533024, 0.717904, -0.00352154, 0.696113); //pre grasp1
-    //geometry_msgs::Pose block_pose = setGeomPose(-0.743945, 0.721829, 1.03214, 0.0, 0.7071068, 0, 0.7071068); //pre grasp2
-    //ori: -0.643964, -0.0400211, 0.0341658, 0.763244
+    // 2. Place the EE above the wood block
+    geometry_msgs::Pose pre_grasp_pose = setGeomPose(-0.764824, 0.734106, 1.26638, 0.0, 0.7071068, 0, 0.7071068);
+    rightArm.setPoseTarget(pre_grasp_pose);
+    success = (rightArm.plan(my_plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
+    ROS_INFO_NAMED("tutorial", "Visualizing plan 1 (pose goal) %s", success ? "" : "FAILED");
+    visual_tools.trigger();
+    visual_tools.prompt("Press 'next' once the plan is complete and then it will move the arm");
+    rightArm.move();
 
+    //geometry_msgs::Pose block_pose = setGeomPose(-0.743945, 0.721829, 1.03214,  0.00533024, 0.717904, -0.00352154, 0.696113);
+    geometry_msgs::Pose target_pose1 = block_pose;
+    target_pose1.position.z += 0.05;
+    rightArm.setPoseTarget(target_pose1);
+    success = (rightArm.plan(my_plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
+    ROS_INFO_NAMED("tutorial", "Visualizing plan 1 (pose goal) %s", success ? "" : "FAILED");
+    visual_tools.trigger();
+    visual_tools.prompt("Press 'next' once the plan is complete and then it will move the arm");
+    rightArm.move();
+
+/*
     geometry_msgs::PoseStamped current_pose = rightArm.getCurrentPose("left_gripper_tool0");
-    geometry_msgs::Pose target_pose1; //box pose
-    target_pose1 = current_pose.pose;
-
     std::cout << std::endl <<"pos: " << current_pose.pose.position.x << ", " << current_pose.pose.position.y << ", " << current_pose.pose.position.z << std::endl;
     std::cout <<"ori: " << current_pose.pose.orientation.x << ", " << current_pose.pose.orientation.y << ", " << current_pose.pose.orientation.z << ", " << current_pose.pose.orientation.w << std::endl;
-
-    target_pose1 = block_pose;
-
-    rightArm.setPoseTarget(target_pose1);
-
-    success = (rightArm.plan(my_plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
-    ROS_INFO_NAMED("tutorial", "Visualizing plan 1 (pose goal) %s", success ? "" : "FAILED");
-    visual_tools.trigger();
-    visual_tools.prompt("Press 'next' once the plan is complete and then it will move the arm");
-    rightArm.move();
-
-
-    block_pose = setGeomPose(-0.743945, 0.721829, 1.03214,  0.00533024, 0.717904, -0.00352154, 0.696113); //pre grasp2
-    geometry_msgs::Pose target_pose2 = block_pose;
-    rightArm.setPoseTarget(target_pose2);
-
-    success = (rightArm.plan(my_plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
-    ROS_INFO_NAMED("tutorial", "Visualizing plan 1 (pose goal) %s", success ? "" : "FAILED");
-    visual_tools.trigger();
-    visual_tools.prompt("Press 'next' once the plan is complete and then it will move the arm");
-    rightArm.move();
-
+*/
 
 /*
     // 3. Open the gripper

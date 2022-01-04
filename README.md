@@ -15,7 +15,7 @@ roslaunch ur_e_gazebo dual_ur_robotiq.launch
 roslaunch robot_moveit_config robot_moveit_planning_execution.launch sim:=true
 roslaunch robot_moveit_config moveit_rviz.launch config:=true
 ```   
-## pick and place simulation
+### Pick and place simulation
 ```commandline
 rosrun pick_place pick_place_collision
 ```

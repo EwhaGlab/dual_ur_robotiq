@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<robot xmlns:xacro="http://wiki.ros.org/xacro" name="dual_ur_robotiq">
+<robot xmlns:xacro="http://wiki.ros.org/xacro" name="robot">
 
   <xacro:property name="PI" value="3.1415926535897931"/>
   <xacro:arg name="transmission_hw_interface" default="hardware_interface/PositionJointInterface"/>

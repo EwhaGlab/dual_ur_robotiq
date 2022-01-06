@@ -1,18 +1,13 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://wiki.ros.org/xacro" name="robot">
-
   <xacro:property name="PI" value="3.1415926535897931"/>
   <xacro:arg name="transmission_hw_interface" default="hardware_interface/PositionJointInterface"/>
 
-  <link name="world"/>
+  <link name="world" />
 
   <!-- Stand -->
   <link name="stand">
-    <inertial>
-        <mass value="1000" />
-        <origin xyz="0 0 1.8" rpy="0 0 ${PI/2}" />
-        <inertia ixx="0.01" ixy="0" ixz="0" iyy="0.01" iyz="0" izz="0.01" />
-    </inertial>
+
     <visual>
       <origin xyz="0 0 1.8" rpy="0 0 ${PI/2}"/>
       <geometry>
@@ -29,12 +24,12 @@
       </geometry>
     </collision>
   </link>
+
   <gazebo reference="stand">
     <material>Gazebo/Grey</material>
   </gazebo>
 
-
-  <joint name="fixed" type="fixed">
+  <joint name="world_stand" type="fixed">
     <parent link="world"/>
     <child link="stand"/>
   </joint>

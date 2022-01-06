@@ -6,7 +6,16 @@
   <remap if="$(arg sim)" from="/scaled_pos_joint_traj_controller/follow_joint_trajectory" to="/pos_joint_traj_controller/follow_joint_trajectory"/>
 
   <!-- Launch moveit -->
-  <include file="$(find ur5e_moveit_config)/launch/move_group.launch">
-    <arg name="debug" default="$(arg debug)" />
-  </include>
+  <group ns="left_arm">
+      <include file="$(find ur5e_moveit_config)/launch/move_group.launch">
+        <arg name="debug" default="$(arg debug)" />
+      </include>
+  </group>
+<!--
+    <group ns="right_arm">
+      <include file="$(find ur5e_moveit_config)/launch/move_group.launch">
+        <arg name="debug" default="$(arg debug)" />
+      </include>
+  </group>
+-->
 </launch>

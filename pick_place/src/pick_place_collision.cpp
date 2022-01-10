@@ -82,7 +82,7 @@ int main(int argc, char** argv)
     collision_object.header.frame_id = rightArm.getPlanningFrame();
     collision_object.id = "table";
     shape_msgs::SolidPrimitive primitive = setPrim(3, 1.7, 4.0, 0.03);
-    geometry_msgs::Pose table_pose = setGeomPose(-1.0, 0, 0.9, 0.0, 1.0, 0.0, 0.0);
+    geometry_msgs::Pose table_pose = setGeomPose(-1.0, 0, 0.95, 0.0, 1.0, 0.0, 0.0);
     collision_object.primitives.push_back(primitive);
     collision_object.primitive_poses.push_back(table_pose);
     collision_object.operation = collision_object.ADD;
@@ -109,19 +109,43 @@ int main(int argc, char** argv)
     visual_tools.prompt("Press 'next' in the RvizVisualToolsGui window to once the table appears in RViz");
 
     // 2. Place the EE above the wood block
-    geometry_msgs::Pose pre_grasp_pose = setGeomPose(-0.764824, 0.734106, 1.26638, 0.0, 0.7071068, 0, 0.7071068);
+    geometry_msgs::Pose pre_grasp_pose = block_pose;//setGeomPose(-0.764824, 0.734106, 1.26638, 0.0, 0.7071068, 0, 0.7071068);
+    pre_grasp_pose.position.z += 0.2;
     rightArm.setPoseTarget(pre_grasp_pose);
     success = (rightArm.plan(my_plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
+    rightArm.move();
+
     ROS_INFO_NAMED("tutorial", "Visualizing plan 1 (pose goal) %s", success ? "" : "FAILED");
     visual_tools.trigger();
     visual_tools.prompt("Press 'next' once the plan is complete and then it will move the arm");
-    rightArm.move();
 
     //geometry_msgs::Pose block_pose = setGeomPose(-0.743945, 0.721829, 1.03214,  0.00533024, 0.717904, -0.00352154, 0.696113);
-    geometry_msgs::Pose target_pose1 = block_pose;
-    target_pose1.position.z += 0.05;
-    rightArm.setPoseTarget(target_pose1);
+    //geometry_msgs::Pose grasp_pose = pre_grasp_pose;
+    pre_grasp_pose.position.z -= 0.04;
+    rightArm.setPoseTarget(pre_grasp_pose);
     success = (rightArm.plan(my_plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
+    rightArm.move();
+
+    pre_grasp_pose.position.z -= 0.04;
+    rightArm.setPoseTarget(pre_grasp_pose);
+    success = (rightArm.plan(my_plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
+    rightArm.move();
+
+    pre_grasp_pose.position.z -= 0.04;
+    rightArm.setPoseTarget(pre_grasp_pose);
+    success = (rightArm.plan(my_plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
+    rightArm.move();
+
+    pre_grasp_pose.position.z -= 0.03;
+    rightArm.setPoseTarget(pre_grasp_pose);
+    success = (rightArm.plan(my_plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
+    rightArm.move();
+
+    pre_grasp_pose.position.z -= 0.02;
+    rightArm.setPoseTarget(pre_grasp_pose);
+    success = (rightArm.plan(my_plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
+    rightArm.move();
+
     ROS_INFO_NAMED("tutorial", "Visualizing plan 1 (pose goal) %s", success ? "" : "FAILED");
     visual_tools.trigger();
     visual_tools.prompt("Press 'next' once the plan is complete and then it will move the arm");

@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>dual_ur_robotiq_description</name>
+  <version>1.0</version>
+  <description>
+      URDF description for Universal UR5e robot arms with robotiq 3F gripper
+  </description>
+
+  <author>Yaesol Kim</author>
+
+  <maintainer email="yaesol@ewha.ac.kr">Yaesol</maintainer>
+
+  <license>BSD</license>
+
+  <url type="website"></url>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <exec_depend>joint_state_publisher</exec_depend>
+  <exec_depend>robot_state_publisher</exec_depend>
+  <exec_depend>rviz</exec_depend>
+  <exec_depend>urdf</exec_depend>
+  <exec_depend>xacro</exec_depend>
+
+  <export>
+  </export>
+</package>

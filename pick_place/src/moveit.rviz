@@ -94,7 +94,7 @@
     </scene>
     <gui fullscreen='0'>
       <camera name='user_camera'>
-        <pose frame=''>-3.96605 0.918413 2.91355 0 0.531643 -0.111807</pose>
+        <pose frame=''>-5.06218 1.55147 3.79128 -0 0.507642 -0.375791</pose>
         <view_controller>orbit</view_controller>
         <projection_type>perspective</projection_type>
       </camera>
@@ -113,10 +113,10 @@
       <heading_deg>0</heading_deg>
     </spherical_coordinates>
     <state world_name='default'>
-      <sim_time>368 675000000</sim_time>
-      <real_time>81 710156842</real_time>
-      <wall_time>1641816770 158564851</wall_time>
-      <iterations>48819</iterations>
+      <sim_time>456 554000000</sim_time>
+      <real_time>231 306328851</real_time>
+      <wall_time>1641307354 891952862</wall_time>
+      <iterations>136698</iterations>
       <model name='ground_plane'>
         <pose frame=''>0 0 0 0 -0 0</pose>
         <scale>1 1 1</scale>
@@ -138,13 +138,13 @@
         </link>
       </model>
       <model name='wood_cube_10cm'>
-        <pose frame=''>-0.716211 0.730216 1.06399 3.14159 -1.57079 3.14159</pose>
+        <pose frame=''>-0.711181 0.736546 1.06399 3.14159 -1.57079 3.14159</pose>
         <scale>1 1 1</scale>
         <link name='link'>
-          <pose frame=''>-0.766211 0.730216 1.06399 3.14159 -1.57079 3.14159</pose>
+          <pose frame=''>-0.761181 0.736546 1.06399 3.14159 -1.57079 3.14159</pose>
           <velocity>0 0 0 0 -0 0</velocity>
-          <acceleration>0 0 -0 0 -0 0</acceleration>
-          <wrench>0 0 -0 0 -0 0</wrench>
+          <acceleration>-0 0 -0 -0 -0 -0</acceleration>
+          <wrench>-0 0 -0 0 -0 0</wrench>
         </link>
       </model>
       <model name='wooden_case'>
@@ -153,14 +153,14 @@
         <link name='base'>
           <pose frame=''>-0.946457 -0.012739 1.07745 0 -1.57069 -3.13753</pose>
           <velocity>3e-06 0 6.5e-05 0 5e-05 0</velocity>
-          <acceleration>-0 -0 0 0 -0 0</acceleration>
-          <wrench>-0 -0 0 0 -0 0</wrench>
+          <acceleration>0 0 -0 0 -0 0</acceleration>
+          <wrench>0 0 -0 0 -0 0</wrench>
         </link>
         <link name='lid'>
           <pose frame=''>-1.0473 -0.013149 1.28787 0 -1.04709 -3.13753</pose>
           <velocity>1.3e-05 0 6.8e-05 0 4.9e-05 0</velocity>
-          <acceleration>-0 0 -0 0 -0 0</acceleration>
-          <wrench>-0 0 -0 0 -0 0</wrench>
+          <acceleration>-0 0 0 0 -0 0</acceleration>
+          <wrench>-0 0 0 0 -0 0</wrench>
         </link>
       </model>
       <light name='sun'>

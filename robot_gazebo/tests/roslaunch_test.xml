@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<launch>
+  <group ns="ur5e__">
+    <include file="$(find robot_gazebo)/launch/ur5e.launch"/>
+  </group>
+
+  <group ns="ur5e_joint_limited__">
+    <include file="$(find robot_gazebo)/launch/ur5e_joint_limited.launch"/>
+  </group>
+
+  <group ns="controller_utils__">
+    <include file="$(find robot_gazebo)/launch/controller_utils.launch"/>
+  </group>
+
+</launch>

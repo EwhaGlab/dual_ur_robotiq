@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package format="2">
   <name>dual_ur_robotiq_description</name>
-  <version>1.0</version>
+  <version>1.0.1</version>
   <description>
       URDF description for Universal UR5e robot arms with robotiq 3F gripper
   </description>

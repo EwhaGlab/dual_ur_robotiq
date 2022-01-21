@@ -2,7 +2,7 @@
 <launch>
   <arg name="gui" default="true" doc="Starts gazebo gui" />
 
-  <include file="$(find ur_e_gazebo)/launch/ur5e.launch">
+  <include file="$(find robot_gazebo)/launch/ur5e.launch">
     <arg name="limited" value="true"/>
     <arg name="gui" value="$(arg gui)"/>
   </include>

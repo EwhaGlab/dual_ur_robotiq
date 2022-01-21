@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.8.3)
 
-project(ur_e_gazebo)
+project(robot_gazebo)
 
 find_package(catkin REQUIRED)
 

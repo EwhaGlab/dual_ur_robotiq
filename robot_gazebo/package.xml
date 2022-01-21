@@ -1,22 +1,18 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>ur_e_gazebo</name>
+  <name>robot_gazebo</name>
   <version>1.2.7</version>
   <description>
-      Gazebo wrapper for the Universal UR5/10 robot arms.
+      Gazebo wrapper for the robot.
   </description>
 
 
-  <author>Alexander Bubeck</author>
-  <author>Shaun Edwards</author>
-  <author>Felix Messmer</author>
-  <maintainer email="g.a.vanderhoorn@tudelft.nl">G.A. vd. Hoorn</maintainer>
-  <maintainer email="miguel.prada@tecnalia.com">Miguel Prada Sarasola</maintainer>
-  <maintainer email="nhg@ipa.fhg.de">Nadia Hammoudeh Garcia</maintainer>
+  <author>YS</author>
+  <maintainer email="kimyaesol@gmail.com">YS</maintainer>
 
   <license>BSD</license>
 
-  <url type="website">http://ros.org/wiki/ur_e_gazebo</url>
+  <url type="website"></url>
 
   <buildtool_depend>catkin</buildtool_depend>
   <test_depend>roslaunch</test_depend>

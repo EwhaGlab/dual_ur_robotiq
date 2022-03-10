@@ -5,21 +5,17 @@
   <description>
      An automatically generated package with all the configuration and launch files for using the robot with the MoveIt! Motion Planning Framework
   </description>
-  <author email="yaesol@ewha.ac.kr">yaesol</author>
-  <maintainer email="yaesol@ewha.ac.kr">yaesol</maintainer>
+  <author email="kimyaesol@gmail.com">yaesol</author>
+  <maintainer email="kimyaesol@gmail.com">yaesol</maintainer>
 
   <license>BSD</license>
-
-  <url type="website">http://moveit.ros.org/</url>
-  <url type="bugtracker">https://github.com/ros-planning/moveit/issues</url>
-  <url type="repository">https://github.com/ros-planning/moveit</url>
 
   <buildtool_depend>catkin</buildtool_depend>
 
   <run_depend>moveit_ros_move_group</run_depend>
   <run_depend>moveit_fake_controller_manager</run_depend>
   <run_depend>moveit_kinematics</run_depend>
-  <run_depend>moveit_planners_ompl</run_depend>
+  <run_depend>moveit_planners_ompl</run_depend>ca
   <run_depend>moveit_ros_visualization</run_depend>
   <run_depend>moveit_setup_assistant</run_depend>
   <run_depend>moveit_simple_controller_manager</run_depend>

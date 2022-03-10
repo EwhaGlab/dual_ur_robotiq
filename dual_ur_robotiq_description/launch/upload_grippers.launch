@@ -1,0 +1,28 @@
+<?xml version="1.0" ?>
+
+<launch>
+  <group ns="left_gripper">
+    <node pkg="robotiq_3f_gripper_control" name="Robotiq3FGripperTcpNode" type="Robotiq3FGripperTcpNode.py" args="192.168.1.11" output="screen">
+    </node>
+
+    <node pkg="robotiq_3f_gripper_control" name="Robotiq3FGripperSimpleController" type="Robotiq3FGripperSimpleController_l.py" args="192.168.1.11" output="screen">
+    </node>
+
+    <node pkg="robotiq_3f_gripper_joint_state_publisher" type="robotiq_3f_gripper_joint_states" name="robotiq_3f_gripper_joint_state" >
+        <param name="gripper_prefix" value="left_" />
+    </node>
+  </group>
+
+  <group ns="right_gripper">
+    <node pkg="robotiq_3f_gripper_control" name="Robotiq3FGripperTcpNode" type="Robotiq3FGripperTcpNode.py" args="192.168.1.12" output="screen">
+    </node>
+
+    <node pkg="robotiq_3f_gripper_control" name="Robotiq3FGripperSimpleController" type="Robotiq3FGripperSimpleController_r.py" args="192.168.1.12" output="screen">
+    </node>
+
+    <node pkg="robotiq_3f_gripper_joint_state_publisher" type="robotiq_3f_gripper_joint_states" name="robotiq_3f_gripper_joint_state" >
+        <param name="gripper_prefix" value="right_" />
+    </node>
+  </group>
+
+</launch>

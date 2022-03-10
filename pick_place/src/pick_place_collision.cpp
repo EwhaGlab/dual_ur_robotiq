@@ -91,9 +91,6 @@ int main(int argc, char** argv)
   visual_tools.prompt("Press 'next' to test the right arm move");
   rightArm.move();
 
-  visual_tools.trigger();
-  visual_tools.prompt("Press 'next' to plan left arm move");
-
   geometry_msgs::Pose start_pose_left = current_pose_left.pose;
   start_pose_left.position.z += 0.01;
   leftArm.setPoseTarget(start_pose_left);
@@ -152,37 +149,18 @@ int main(int argc, char** argv)
   pre_grasp_pose.position.z += 0.2;
 
   rightArm.setApproximateJointValueTarget(pre_grasp_pose, "right_gripper_tool0");
-  //rightArm.setPoseTarget(pre_grasp_pose);
   success = (rightArm.plan(my_plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
   ROS_INFO_NAMED("tutorial", "Visualizing plan 1 (pose goal) %s", success ? "" : "FAILED");
   visual_tools.trigger();
   visual_tools.prompt("2. Press 'next' once the plan is complete and then it will move the arm");
   rightArm.move();
 
-  pre_grasp_pose.position.z -= 0.04;
-  rightArm.setPoseTarget(pre_grasp_pose);
+  pre_grasp_pose.position.z -= 0.12;
+  rightArm.setApproximateJointValueTarget(pre_grasp_pose, "right_gripper_tool0");
   success = (rightArm.plan(my_plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
-  rightArm.move();
-
-  pre_grasp_pose.position.z -= 0.03;
-  rightArm.setPoseTarget(pre_grasp_pose);
-  success = (rightArm.plan(my_plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
-  rightArm.move();
-
-  pre_grasp_pose.position.z -= 0.02;
-  rightArm.setPoseTarget(pre_grasp_pose);
-  success = (rightArm.plan(my_plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
-  rightArm.move();
-
-  pre_grasp_pose.position.z -= 0.01;
-  rightArm.setPoseTarget(pre_grasp_pose);
-  success = (rightArm.plan(my_plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
-  rightArm.move();
-
-  pre_grasp_pose.position.z -= 0.01;
-  rightArm.setPoseTarget(pre_grasp_pose);
-  success = (rightArm.plan(my_plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
-  rightArm.move();
+  visual_tools.trigger();
+  visual_tools.prompt("2-1. Press 'next' to move the right arm close to the block");
+  rightArm.execute(my_plan);
 
   // 3. Close the right gripper
   visual_tools.trigger();
@@ -202,26 +180,13 @@ int main(int argc, char** argv)
   visual_tools.prompt("4. Press 'next' once the plan is complete and then it will move the left arm");
   leftArm.execute(my_plan);
 
-  place_pose.position.z -= 0.03;
+  place_pose.position.z -= 0.05;
   leftArm.setApproximateJointValueTarget(place_pose, "left_gripper_tool0");
   success = (leftArm.plan(my_plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
-  leftArm.execute(my_plan);
 
-  place_pose.position.z -= 0.02;
-  leftArm.setApproximateJointValueTarget(place_pose, "left_gripper_tool0");
-  success = (leftArm.plan(my_plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
+  visual_tools.trigger();
+  visual_tools.prompt("2-1. Press 'next' to move the left arm close to the block");
   leftArm.execute(my_plan);
-
-  place_pose.position.z -= 0.02;
-  leftArm.setApproximateJointValueTarget(place_pose, "left_gripper_tool0");
-  success = (leftArm.plan(my_plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
-  leftArm.execute(my_plan);
-
-  place_pose.position.z -= 0.01;
-  leftArm.setApproximateJointValueTarget(place_pose, "left_gripper_tool0");
-  success = (leftArm.plan(my_plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
-  leftArm.execute(my_plan);
-
 
   // 5. Close the left gripper
   visual_tools.trigger();
@@ -243,17 +208,18 @@ int main(int argc, char** argv)
   geometry_msgs::Pose pose_left = current_pose_left.pose;
 
   visual_tools.trigger();
-  visual_tools.prompt("6. Press 'next' to pick up the obejcts");
+  visual_tools.prompt("6. Press 'next' to pick up the objects");
 
-  pose_right.position.z += 0.02;
-  rightArm.setPoseTarget(pose_right);
+  pose_right.position.z += 0.03;
+  rightArm.setApproximateJointValueTarget(pose_right, "right_gripper_tool0");
   success = (rightArm.plan(my_plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
-  rightArm.move();
-  pose_left.position.z += 0.02;
-  leftArm.setPoseTarget(pose_left);
+  rightArm.execute(my_plan);
+  pose_left.position.z += 0.03;
+  leftArm.setApproximateJointValueTarget(pose_left, "left_gripper_tool0");
   success = (leftArm.plan(my_plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
-  leftArm.move();
+  leftArm.execute(my_plan);
 
+/*
   pose_right.position.z += 0.02;
   rightArm.setPoseTarget(pose_right);
   success = (rightArm.plan(my_plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
@@ -271,13 +237,13 @@ int main(int argc, char** argv)
   leftArm.setPoseTarget(pose_left);
   success = (leftArm.plan(my_plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
   leftArm.move();
-
+*/
   // 7. move the basket
   visual_tools.trigger();
   visual_tools.prompt("7. Press 'next' to plan the pick up motion for left arm");
 
   pose_left.position.x = -0.784004;
-  pose_left.position.y = -0.366719;
+  pose_left.position.y = -0.30;
   pose_left.position.z = 1.12456;
 
   pose_left.orientation.x = -0.77;
@@ -293,7 +259,7 @@ int main(int argc, char** argv)
   leftArm.move();
 
   //move the block
-  pose_right.position.z += 0.25;
+  pose_right.position.z += 0.2;
   rightArm.setPoseTarget(pose_right);
   success = (rightArm.plan(my_plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
   rightArm.move();

@@ -1,4 +1,4 @@
-# dual arm ros driver
+# Dual arm robot ros driver
 
 This repository provides our customized UR5e integration with robotiq 3 Finger gripper.  
 
@@ -16,20 +16,20 @@ roslaunch dual_arm_moveit_config robot_moveit_planning_execution.launch sim:=tru
 roslaunch dual_arm_moveit_config moveit_rviz.launch config:=true
 ```   
 
-## Real robot execution: Bring up grippers and robots, Run moveit and Rviz   
+## Real robot execution: Bring up robot, run Moveit and Rviz   
 Run the lines below in the respective terminals.
 ```commandline
 roscore
 roslaunch robotiq_3f_gripper_control dual_gripper_tcp.launch
+roslaunch robotiq_3f_gripper_control dual_gripper_controller.launch
 roslaunch robotiq_3f_gripper_joint_state_publisher dual_gripper_joint_state_publisher.launch
-roslaunch robotiq_3f_gripper_visualization robotiq_gripper_upload.launch
 
 roslaunch ur_robot_driver robot_bringup.launch   
 roslaunch robot_moveit_config robot_moveit_planning_execution.launch sim:=false     
 roslaunch robot_moveit_config moveit_rviz.launch config:=true   
 ```
 
-For the seperate control for left/right arm
+For the separate control for left/right arm
 ```commandline
 roslaunch ur_robot_driver dual_ur_robotiq_bringup.launch   
 roslaunch ur5e_moveit_config ur5e_moveit_planning_execution.launch   

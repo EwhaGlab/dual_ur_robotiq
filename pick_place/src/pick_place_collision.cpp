@@ -1,4 +1,5 @@
 #include <ros/ros.h>
+#include <std_msgs/Char.h>
 #include <moveit/move_group_interface/move_group_interface.h>
 #include <moveit/planning_scene_interface/planning_scene_interface.h>
 
@@ -23,27 +24,22 @@ int main(int argc, char** argv)
   ros::AsyncSpinner spinner(1);
   spinner.start();
 
-  // MoveIt operates on sets of joints called "planning groups" and stores them in an object called
-  // the `JointModelGroup`. Throughout MoveIt the terms "planning group" and "joint model group"
-  // are used interchangably.
-  static const std::string PLANNING_GROUP_ARM = "left_arm";
-  static const std::string PLANNING_GROUP_GRIPPER = "left_gripper";
+  ros::Publisher gripper_pub_left = n.advertise<std_msgs::Char>("left_gripper/gripper_left", 10);
+  ros::Publisher gripper_pub_right = n.advertise<std_msgs::Char>("right_gripper/gripper_right", 10);
 
-  // The :planning_interface:`MoveGroupInterface` class can be easily
-  // setup using just the name of the planning group you would like to control and plan for.
-  moveit::planning_interface::MoveGroupInterface rightArm(PLANNING_GROUP_ARM);
-  moveit::planning_interface::MoveGroupInterface move_group_interface_gripper(PLANNING_GROUP_GRIPPER);
+
+  static const std::string PLANNING_GROUP_ARM_RIGHT = "right_arm";
+  static const std::string PLANNING_GROUP_ARM_LEFT = "left_arm";
+
+  moveit::planning_interface::MoveGroupInterface rightArm(PLANNING_GROUP_ARM_RIGHT);
+  moveit::planning_interface::MoveGroupInterface leftArm(PLANNING_GROUP_ARM_LEFT);
   moveit::planning_interface::PlanningSceneInterface planning_scene_interface;
+
   bool success;
 
-  // The package MoveItVisualTools provides many capabilities for visualizing objects, robots,
-  // and trajectories in RViz as well as debugging tools such as step-by-step introspection of a script.
   namespace rvt = rviz_visual_tools;
   moveit_visual_tools::MoveItVisualTools visual_tools(rightArm.getPlanningFrame().c_str()); //here might be the problem?
   visual_tools.deleteAllMarkers();
-
-  // Remote control is an introspection tool that allows users to step through a high level script
-  // via buttons and keyboard shortcuts in RViz
   visual_tools.loadRemoteControl();
 
   // RViz provides many types of markers, in this demo we will use text, cylinders, and spheres
@@ -54,151 +50,270 @@ int main(int argc, char** argv)
   // Batch publishing is used to reduce the number of messages being sent to RViz for large visualizations
   visual_tools.trigger();
 
-    // We can get a list of all the groups in the robot:
-    ROS_INFO_NAMED("tutorial", "Available Planning Groups:");
-    std::copy(rightArm.getJointModelGroupNames().begin(),
-    rightArm.getJointModelGroupNames().end(), std::ostream_iterator<std::string>(std::cout, ", "));
-    moveit::planning_interface::MoveGroupInterface::Plan my_plan;
+  // We can get a list of all the groups in the robot:
+  ROS_INFO_NAMED("tutorial", "Available Planning Groups:");
+  std::copy(rightArm.getJointModelGroupNames().begin(),
+  rightArm.getJointModelGroupNames().end(), std::ostream_iterator<std::string>(std::cout, ", "));
+  moveit::planning_interface::MoveGroupInterface::Plan my_plan;
 
-    ROS_INFO_NAMED("tutorial", "\nEnd effector link: %s", rightArm.getEndEffectorLink().c_str());
-    visual_tools.prompt("Press 'next' in the RvizVisualToolsGui window to start the demo");
+  ROS_INFO_NAMED("tutorial", "\nEnd effector link: %s", rightArm.getEndEffectorLink().c_str());
+  visual_tools.prompt("Press 'next' in the RvizVisualToolsGui window to start the demo");
 
-    // 1. Move to home position
-    rightArm.setJointValueTarget(rightArm.getNamedTargetValues("left_arm_zero"));
-    success = (rightArm.plan(my_plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
-    ROS_INFO_NAMED("tutorial", "Visualizing plan 1 (pose goal) %s", success ? "" : "FAILED");
+  //activate left and right grippers
+  std_msgs::Char gripper_msg_l, gripper_msg_r;
+  gripper_msg_l.data = 'w'; // start with wide mode
+  gripper_msg_r.data = 'p'; // start with pinch mode
+  gripper_pub_left.publish(gripper_msg_l);
+  gripper_pub_right.publish(gripper_msg_r);
 
-    rightArm.move();
+  gripper_msg_l.data = 'o'; // open
+  gripper_msg_r.data = 'o'; // open
+  gripper_pub_left.publish(gripper_msg_l);
+  gripper_pub_right.publish(gripper_msg_r);
 
-    visual_tools.publishText(text_pose, "move left arm zero pose", rvt::WHITE, rvt::XLARGE);
-    visual_tools.trigger();
-    visual_tools.prompt("Press 'next' to continue the demo");
+  //0. test motion
+  geometry_msgs::PoseStamped current_pose_left = leftArm.getCurrentPose("left_gripper_tool0");
+  std::cout << std::endl <<"left pos: " << current_pose_left.pose.position.x << ", " << current_pose_left.pose.position.y << ", " << current_pose_left.pose.position.z << std::endl;
+  std::cout <<"ori: " << current_pose_left.pose.orientation.x << ", " << current_pose_left.pose.orientation.y << ", " << current_pose_left.pose.orientation.z << ", " << current_pose_left.pose.orientation.w << std::endl;
 
-    // 1-2. Add Collision object
-    // add table
-    std::vector<moveit_msgs::CollisionObject> collision_objects;
+  geometry_msgs::PoseStamped current_pose_right = rightArm.getCurrentPose("right_gripper_tool0");
+  std::cout << std::endl <<"right pos: " << current_pose_right.pose.position.x << ", " << current_pose_right.pose.position.y << ", " << current_pose_right.pose.position.z << std::endl;
+  std::cout <<"ori: " << current_pose_right.pose.orientation.x << ", " << current_pose_right.pose.orientation.y << ", " << current_pose_right.pose.orientation.z << ", " << current_pose_right.pose.orientation.w << std::endl;
 
-    moveit_msgs::CollisionObject collision_object;
-    collision_object.header.frame_id = rightArm.getPlanningFrame();
-    collision_object.id = "table";
-    shape_msgs::SolidPrimitive primitive = setPrim(3, 1.7, 4.0, 0.03);
-    geometry_msgs::Pose table_pose = setGeomPose(-1.0, 0, 0.9, 0.0, 1.0, 0.0, 0.0);
-    collision_object.primitives.push_back(primitive);
-    collision_object.primitive_poses.push_back(table_pose);
-    collision_object.operation = collision_object.ADD;
-    collision_objects.push_back(collision_object);
+  geometry_msgs::Pose start_pose_right = current_pose_right.pose;
+  start_pose_right.position.z += 0.01;
+  rightArm.setPoseTarget(start_pose_right);
+  success = (rightArm.plan(my_plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
+  ROS_INFO_NAMED("tutorial", "Visualizing plan 1 (pose goal) %s", success ? "" : "FAILED");
 
-    ROS_INFO_NAMED("tutorial", "Add a table into the world");
-    //planning_scene_interface.applyCollisionObjects(collision_objects);
+  visual_tools.publishText(text_pose, "move test", rvt::WHITE, rvt::XLARGE);
+  visual_tools.trigger();
+  visual_tools.prompt("Press 'next' to test the right arm move");
+  rightArm.move();
 
-    // add block
-    moveit_msgs::CollisionObject object_to_attach;
-    object_to_attach.header.frame_id = rightArm.getPlanningFrame();
-    object_to_attach.id = "block";
-    primitive = setPrim(3, 0.07, 0.07, 0.07);
-    geometry_msgs::Pose block_pose = setGeomPose(-0.764824, 0.734106, 1.00, 0.0, 0.7071068, 0, 0.7071068);
-    object_to_attach.primitives.push_back(primitive);
-    object_to_attach.primitive_poses.push_back(block_pose);
-    object_to_attach.operation = object_to_attach.ADD;
-    collision_objects.push_back(object_to_attach);
+  visual_tools.trigger();
+  visual_tools.prompt("Press 'next' to plan left arm move");
 
-    planning_scene_interface.addCollisionObjects(collision_objects);
+  geometry_msgs::Pose start_pose_left = current_pose_left.pose;
+  start_pose_left.position.z += 0.01;
+  leftArm.setPoseTarget(start_pose_left);
+  success = (leftArm.plan(my_plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
+  ROS_INFO_NAMED("tutorial", "Visualizing plan 1 (pose goal) %s", success ? "" : "FAILED");
 
-    visual_tools.publishText(text_pose, "Add table", rvt::WHITE, rvt::XLARGE);
-    visual_tools.trigger();
-    visual_tools.prompt("Press 'next' in the RvizVisualToolsGui window to once the table appears in RViz");
+  visual_tools.publishText(text_pose, "move test", rvt::WHITE, rvt::XLARGE);
+  visual_tools.trigger();
+  visual_tools.prompt("Press 'next' to test the left arm move");
+  leftArm.move();
 
-    // 2. Place the EE above the wood block
-    geometry_msgs::Pose pre_grasp_pose = setGeomPose(-0.764824, 0.734106, 1.26638, 0.0, 0.7071068, 0, 0.7071068);
-    rightArm.setPoseTarget(pre_grasp_pose);
-    success = (rightArm.plan(my_plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
-    ROS_INFO_NAMED("tutorial", "Visualizing plan 1 (pose goal) %s", success ? "" : "FAILED");
-    visual_tools.trigger();
-    visual_tools.prompt("Press 'next' once the plan is complete and then it will move the arm");
-    rightArm.move();
+  // 1-2. Add Collision object
+  ROS_INFO_NAMED("tutorial", "Add objects into the world");
+  std::vector<moveit_msgs::CollisionObject> collision_objects;
 
-    //geometry_msgs::Pose block_pose = setGeomPose(-0.743945, 0.721829, 1.03214,  0.00533024, 0.717904, -0.00352154, 0.696113);
-    geometry_msgs::Pose target_pose1 = block_pose;
-    target_pose1.position.z += 0.05;
-    rightArm.setPoseTarget(target_pose1);
-    success = (rightArm.plan(my_plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
-    ROS_INFO_NAMED("tutorial", "Visualizing plan 1 (pose goal) %s", success ? "" : "FAILED");
-    visual_tools.trigger();
-    visual_tools.prompt("Press 'next' once the plan is complete and then it will move the arm");
-    rightArm.move();
+  moveit_msgs::CollisionObject collision_object;
+  collision_object.header.frame_id = rightArm.getPlanningFrame();
+  collision_object.id = "table";
+  shape_msgs::SolidPrimitive primitive = setPrim(3, 1.7, 4.0, 0.03);
+  geometry_msgs::Pose table_pose = setGeomPose(-1.0, 0, 0.95, 0.0, 1.0, 0.0, 0.0);
+  collision_object.primitives.push_back(primitive);
+  collision_object.primitive_poses.push_back(table_pose);
+  collision_object.operation = collision_object.ADD;
+  collision_objects.push_back(collision_object);
 
-/*
-    geometry_msgs::PoseStamped current_pose = rightArm.getCurrentPose("left_gripper_tool0");
-    std::cout << std::endl <<"pos: " << current_pose.pose.position.x << ", " << current_pose.pose.position.y << ", " << current_pose.pose.position.z << std::endl;
-    std::cout <<"ori: " << current_pose.pose.orientation.x << ", " << current_pose.pose.orientation.y << ", " << current_pose.pose.orientation.z << ", " << current_pose.pose.orientation.w << std::endl;
-*/
+  // add basket
+  moveit_msgs::CollisionObject object_to_attach;
+  object_to_attach.header.frame_id = leftArm.getPlanningFrame();
+  collision_object.id = "basket";
+  primitive = setPrim(3, 0.07, 0.07, 0.07);
+  geometry_msgs::Pose basket_pose = setGeomPose(-0.631758, -1.03046, 1.00, 0.0, 0.0, 0.0, 1.0);
+  collision_object.primitives.push_back(primitive);
+  collision_object.primitive_poses.push_back(basket_pose);
+  collision_object.operation = collision_object.ADD;
+  collision_objects.push_back(collision_object);
 
-/*
-    // 3. Open the gripper
-    moveit::planning_interface::MoveGroupInterface::Plan my_plan_gripper;
+  // add block
+  object_to_attach.header.frame_id = rightArm.getPlanningFrame();
+  object_to_attach.id = "block";
+  primitive = setPrim(3, 0.07, 0.07, 0.07);
+  geometry_msgs::Pose block_pose = setGeomPose(-0.764824, 0.734106, 1.00, 0.0, 0.7071068, 0, 0.7071068);
+  object_to_attach.primitives.push_back(primitive);
+  object_to_attach.primitive_poses.push_back(block_pose);
+  object_to_attach.operation = object_to_attach.ADD;
+  collision_objects.push_back(object_to_attach);
 
-    move_group_interface_gripper.setJointValueTarget(move_group_interface_gripper.getNamedTargetValues("open"));
+  planning_scene_interface.addCollisionObjects(collision_objects);
 
-    success = (move_group_interface_gripper.plan(my_plan_gripper) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
+  visual_tools.publishText(text_pose, "Add objects", rvt::WHITE, rvt::XLARGE);
+  visual_tools.trigger();
+  visual_tools.prompt("1. Press 'next' in the RvizVisualToolsGui window to once the table appears in RViz");
 
-    ROS_INFO_NAMED("tutorial", "Visualizing plan 1 (pose goal) %s", success ? "" : "FAILED");
+  // 2. Place the right EE above the wood block
+  geometry_msgs::Pose pre_grasp_pose = start_pose_right;
+  pre_grasp_pose.position = block_pose.position;
+  pre_grasp_pose.position.z += 0.2;
 
-    move_group_interface_gripper.move();
+  rightArm.setApproximateJointValueTarget(pre_grasp_pose, "right_gripper_tool0");
+  //rightArm.setPoseTarget(pre_grasp_pose);
+  success = (rightArm.plan(my_plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
+  ROS_INFO_NAMED("tutorial", "Visualizing plan 1 (pose goal) %s", success ? "" : "FAILED");
+  visual_tools.trigger();
+  visual_tools.prompt("2. Press 'next' once the plan is complete and then it will move the arm");
+  rightArm.move();
 
-    // 4. Move the TCP close to the object
-    target_pose1.position.z = target_pose1.position.z - 0.2;
-    rightArm.setPoseTarget(target_pose1);
+  pre_grasp_pose.position.z -= 0.04;
+  rightArm.setPoseTarget(pre_grasp_pose);
+  success = (rightArm.plan(my_plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
+  rightArm.move();
 
-    success = (rightArm.plan(my_plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
+  pre_grasp_pose.position.z -= 0.03;
+  rightArm.setPoseTarget(pre_grasp_pose);
+  success = (rightArm.plan(my_plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
+  rightArm.move();
 
-    ROS_INFO_NAMED("tutorial", "Visualizing plan 1 (pose goal) %s", success ? "" : "FAILED");
+  pre_grasp_pose.position.z -= 0.02;
+  rightArm.setPoseTarget(pre_grasp_pose);
+  success = (rightArm.plan(my_plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
+  rightArm.move();
 
-    rightArm.move();
+  pre_grasp_pose.position.z -= 0.01;
+  rightArm.setPoseTarget(pre_grasp_pose);
+  success = (rightArm.plan(my_plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
+  rightArm.move();
 
-    // 5. Close the  gripper
-    move_group_interface_gripper.setJointValueTarget(move_group_interface_gripper.getNamedTargetValues("closed"));
+  pre_grasp_pose.position.z -= 0.01;
+  rightArm.setPoseTarget(pre_grasp_pose);
+  success = (rightArm.plan(my_plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
+  rightArm.move();
 
-    success = (move_group_interface_gripper.plan(my_plan_gripper) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
+  // 3. Close the right gripper
+  visual_tools.trigger();
+  visual_tools.prompt("3. Press 'next' to close the right gripper");
+  gripper_msg_r.data = 'c';
+  gripper_pub_right.publish(gripper_msg_r);
 
-    ROS_INFO_NAMED("tutorial", "Visualizing plan 1 (pose goal) %s", success ? "" : "FAILED");
+  // 4. Place the left EE above the basket
+  geometry_msgs::Pose place_pose = start_pose_left;
+  place_pose.position = basket_pose.position;
+  place_pose.position.z += 0.2;
 
-    move_group_interface_gripper.move();
+  leftArm.setApproximateJointValueTarget(place_pose, "left_gripper_tool0");
+  success = (leftArm.plan(my_plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
+  ROS_INFO_NAMED("tutorial", "Visualizing plan 1 (pose goal) %s", success ? "" : "FAILED");
+  visual_tools.trigger();
+  visual_tools.prompt("4. Press 'next' once the plan is complete and then it will move the left arm");
+  leftArm.execute(my_plan);
 
-    // 6. Move the TCP above the plate
-    target_pose1.position.z = target_pose1.position.z + 0.2;
-    target_pose1.position.x = target_pose1.position.x - 0.6;
-    rightArm.setPoseTarget(target_pose1);
+  place_pose.position.z -= 0.03;
+  leftArm.setApproximateJointValueTarget(place_pose, "left_gripper_tool0");
+  success = (leftArm.plan(my_plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
+  leftArm.execute(my_plan);
 
-    success = (rightArm.plan(my_plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
+  place_pose.position.z -= 0.02;
+  leftArm.setApproximateJointValueTarget(place_pose, "left_gripper_tool0");
+  success = (leftArm.plan(my_plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
+  leftArm.execute(my_plan);
 
-    ROS_INFO_NAMED("tutorial", "Visualizing plan 1 (pose goal) %s", success ? "" : "FAILED");
+  place_pose.position.z -= 0.02;
+  leftArm.setApproximateJointValueTarget(place_pose, "left_gripper_tool0");
+  success = (leftArm.plan(my_plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
+  leftArm.execute(my_plan);
 
-    rightArm.move();
+  place_pose.position.z -= 0.01;
+  leftArm.setApproximateJointValueTarget(place_pose, "left_gripper_tool0");
+  success = (leftArm.plan(my_plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
+  leftArm.execute(my_plan);
 
-    // 7. Lower the TCP above the plate
-    target_pose1.position.z = target_pose1.position.z - 0.14;
-    rightArm.setPoseTarget(target_pose1);
 
-    success = (rightArm.plan(my_plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
+  // 5. Close the left gripper
+  visual_tools.trigger();
+  visual_tools.prompt("5. Press 'next' to close the left gripper");
+  gripper_msg_l.data = 'c';
+  gripper_pub_left.publish(gripper_msg_l);
 
-    ROS_INFO_NAMED("tutorial", "Visualizing plan 1 (pose goal) %s", success ? "" : "FAILED");
+  // 5-1. remove objects from the planning scene
+  std::vector<std::string> object_ids;
+  object_ids.push_back("block");
+  object_ids.push_back("basket");
+  planning_scene_interface.removeCollisionObjects(object_ids);
 
-    rightArm.move();
+  // 6. pick up both block and basket
+  current_pose_right = rightArm.getCurrentPose("right_gripper_tool0");
+  current_pose_left = leftArm.getCurrentPose("left_gripper_tool0");
 
-    // 8. Open the gripper
-    move_group_interface_gripper.setJointValueTarget(move_group_interface_gripper.getNamedTargetValues("open"));
+  geometry_msgs::Pose pose_right = current_pose_right.pose;
+  geometry_msgs::Pose pose_left = current_pose_left.pose;
 
-    success = (move_group_interface_gripper.plan(my_plan_gripper) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
+  visual_tools.trigger();
+  visual_tools.prompt("6. Press 'next' to pick up the obejcts");
 
-    ROS_INFO_NAMED("tutorial", "Visualizing plan 1 (pose goal) %s", success ? "" : "FAILED");
+  pose_right.position.z += 0.02;
+  rightArm.setPoseTarget(pose_right);
+  success = (rightArm.plan(my_plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
+  rightArm.move();
+  pose_left.position.z += 0.02;
+  leftArm.setPoseTarget(pose_left);
+  success = (leftArm.plan(my_plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
+  leftArm.move();
 
-    move_group_interface_gripper.move();
+  pose_right.position.z += 0.02;
+  rightArm.setPoseTarget(pose_right);
+  success = (rightArm.plan(my_plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
+  rightArm.move();
+  pose_left.position.z += 0.02;
+  leftArm.setPoseTarget(pose_left);
+  success = (leftArm.plan(my_plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
+  leftArm.move();
 
-    ROS_INFO_NAMED("tutorial", "Remove the object from the world");
-    std::vector<std::string> object_ids;
-    object_ids.push_back(collision_object.id);
-    planning_scene_interface.removeCollisionObjects(object_ids);
-*/
+  pose_right.position.z += 0.01;
+  rightArm.setPoseTarget(pose_right);
+  success = (rightArm.plan(my_plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
+  rightArm.move();
+  pose_left.position.z += 0.01;
+  leftArm.setPoseTarget(pose_left);
+  success = (leftArm.plan(my_plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
+  leftArm.move();
+
+  // 7. move the basket
+  visual_tools.trigger();
+  visual_tools.prompt("7. Press 'next' to plan the pick up motion for left arm");
+
+  pose_left.position.x = -0.784004;
+  pose_left.position.y = -0.366719;
+  pose_left.position.z = 1.12456;
+
+  pose_left.orientation.x = -0.77;
+  pose_left.orientation.y = -0.00;
+  pose_left.orientation.z = 0.63;
+  pose_left.orientation.w = 0.10;
+
+  leftArm.setApproximateJointValueTarget(pose_left, "left_gripper_tool0");
+  success = (leftArm.plan(my_plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
+  ROS_INFO_NAMED("tutorial", "Visualizing plan 1 (pose goal) %s", success ? "" : "FAILED");
+  visual_tools.trigger();
+  visual_tools.prompt("8. Press 'next' to move left arm to the center of the robot");
+  leftArm.move();
+
+  //move the block
+  pose_right.position.z += 0.25;
+  rightArm.setPoseTarget(pose_right);
+  success = (rightArm.plan(my_plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
+  rightArm.move();
+
+  pose_right.position.x = -0.77;
+  pose_right.position.y = 0.00;
+
+  rightArm.setApproximateJointValueTarget(pose_right, "right_gripper_tool0");
+  success = (rightArm.plan(my_plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
+  ROS_INFO_NAMED("tutorial", "Visualizing plan 1 (pose goal) %s", success ? "" : "FAILED");
+  visual_tools.trigger();
+  visual_tools.prompt("Press 'next' once the plan is complete and then it will move the arm");
+  rightArm.move();
+
+  visual_tools.trigger();
+  visual_tools.prompt("Press 'next' to open!");
+
+  gripper_msg_r.data = 'o'; // open
+  gripper_pub_right.publish(gripper_msg_r);
+
   ros::shutdown();
   return 0;
 }

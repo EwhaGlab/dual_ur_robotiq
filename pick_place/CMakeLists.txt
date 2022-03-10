@@ -46,8 +46,6 @@ catkin_package(
 
 include_directories(SYSTEM ${catkin_INCLUDE_DIRS} ${Boost_INCLUDE_DIR} ${EIGEN3_INCLUDE_DIRS})
 
-add_executable(pick_place_no_collision src/pick_place_no_collision.cpp)
-target_link_libraries(pick_place_no_collision ${catkin_LIBRARIES} ${Boost_LIBRARIES})
 
 add_executable(pick_place_collision src/pick_place_collision.cpp)
 target_link_libraries(pick_place_collision ${catkin_LIBRARIES} ${Boost_LIBRARIES})

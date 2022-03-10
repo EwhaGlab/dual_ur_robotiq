@@ -11,7 +11,7 @@
     <visual>
       <origin xyz="0 0 1.8" rpy="0 0 ${PI/2}"/>
       <geometry>
-        <mesh filename="package://ur_e_description/meshes/dual_arm_mount.stl" scale="0.03 0.03 0.03" />
+        <mesh filename="package://dual_ur_robotiq_description/meshes/dual_arm_mount.stl" scale="0.03 0.03 0.03" />
       </geometry>
       <material name="DarkGrey">
         <color rgba="0.3 0.3 0.3 1.0"/>
@@ -20,7 +20,7 @@
     <collision>
       <origin xyz="0 0 1.8" rpy="0 0 ${PI/2}"/>
       <geometry>
-        <mesh filename="package://ur_e_description/meshes/dual_arm_mount.stl" scale="0.03 0.03 0.03" />
+        <mesh filename="package://dual_ur_robotiq_description/meshes/dual_arm_mount.stl" scale="0.03 0.03 0.03" />
       </geometry>
     </collision>
   </link>
@@ -38,10 +38,10 @@
 <!-- (1) UR5 (extracted from "ur_description/ur5_upload.launch" from "universal_robot" package-->
 
   <!-- common stuff -->
-  <xacro:include filename="$(find ur_e_description)/urdf/common.gazebo.xacro" />
+  <xacro:include filename="$(find dual_ur_robotiq_description)/urdf/common.gazebo.xacro" />
 
   <!-- ur5e -->
-  <xacro:include filename="$(find ur_e_description)/urdf/ur5e.urdf.xacro" />
+  <xacro:include filename="$(find dual_ur_robotiq_description)/urdf/ur5e.urdf.xacro" />
 
   <!-- left arm -->
   <xacro:ur5e_robot prefix="left_" joint_limited="false" transmission_hw_interface="$(arg transmission_hw_interface)"/>

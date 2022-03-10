@@ -5,7 +5,6 @@
   <group if="$(arg sim)"> <!--simulation-->
     <!-- Remap follow_joint_trajectory -->
     <remap if="$(arg sim)" from="/scaled_pos_joint_traj_controller/follow_joint_trajectory" to="/pos_joint_traj_controller/follow_joint_trajectory"/>
-    <!-- Launch moveit -->
     <include file="$(find robot_moveit_config)/launch/move_group.launch">
       <arg name="debug" default="$(arg debug)" />
     </include>
@@ -18,18 +17,4 @@
     </include>
   </group>
 
-
-
 </launch>
-
-
-
-
-<!--
-    <group ns="left_arm">
-        <remap if="$(arg sim)" from="/scaled_pos_joint_traj_controller/follow_joint_trajectory" to="/pos_joint_traj_controller/follow_joint_trajectory"/>
-    </group>
-    <group ns="right_arm">
-        <remap if="$(arg sim)" from="/scaled_pos_joint_traj_controller/follow_joint_trajectory" to="/pos_joint_traj_controller/follow_joint_trajectory"/>
-    </group>
-    -->

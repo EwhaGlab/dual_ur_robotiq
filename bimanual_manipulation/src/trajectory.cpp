@@ -1,21 +1,22 @@
 #include "trajectory.h"
 
-void DrawingInput::readDrawingFileArb(){
+void Trajectory::readTraj(){
   std::string line;
 
-  std::ifstream txt(ros::package::getPath("large_scale_drawing")+this->file_name_full);
+  std::ifstream txt(ros::package::getPath("bimanual_manipulation")+this->file_name_full);
   // check if text file is well opened
   if(!txt.is_open()){
     std::cout << "FILE NOT FOUND\n";
   }
 
   // first line indicates the size
+  /*
   std::getline(txt, line); // drawing size
   std::vector<std::string> tempSplit = split(line, ' ');
   double width = stod(tempSplit[0]);
   double height = stod(tempSplit[1]);
   setDrawingSize(width/height);
-
+*/
   double x, y, z;
   point_t pt, orientation;
   Stroke stroke;

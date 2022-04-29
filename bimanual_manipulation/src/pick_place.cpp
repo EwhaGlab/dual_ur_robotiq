@@ -27,7 +27,6 @@ int main(int argc, char** argv)
   ros::Publisher gripper_pub_left = n.advertise<std_msgs::Char>("left_gripper/gripper_left", 10);
   ros::Publisher gripper_pub_right = n.advertise<std_msgs::Char>("right_gripper/gripper_right", 10);
 
-
   static const std::string PLANNING_GROUP_ARM_RIGHT = "right_arm";
   static const std::string PLANNING_GROUP_ARM_LEFT = "left_arm";
 
@@ -38,7 +37,7 @@ int main(int argc, char** argv)
   bool success;
 
   namespace rvt = rviz_visual_tools;
-  moveit_visual_tools::MoveItVisualTools visual_tools(rightArm.getPlanningFrame().c_str()); //here might be the problem?
+  moveit_visual_tools::MoveItVisualTools visual_tools(rightArm.getPlanningFrame().c_str());
   visual_tools.deleteAllMarkers();
   visual_tools.loadRemoteControl();
 
@@ -81,6 +80,9 @@ int main(int argc, char** argv)
   std::cout <<"ori: " << current_pose_right.pose.orientation.x << ", " << current_pose_right.pose.orientation.y << ", " << current_pose_right.pose.orientation.z << ", " << current_pose_right.pose.orientation.w << std::endl;
 
   geometry_msgs::Pose start_pose_right = current_pose_right.pose;
+  geometry_msgs::Pose start_pose_left = current_pose_left.pose;
+
+
   start_pose_right.position.z += 0.01;
   rightArm.setPoseTarget(start_pose_right);
   success = (rightArm.plan(my_plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
@@ -91,7 +93,7 @@ int main(int argc, char** argv)
   visual_tools.prompt("Press 'next' to test the right arm move");
   rightArm.move();
 
-  geometry_msgs::Pose start_pose_left = current_pose_left.pose;
+
   start_pose_left.position.z += 0.01;
   leftArm.setPoseTarget(start_pose_left);
   success = (leftArm.plan(my_plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
@@ -109,8 +111,8 @@ int main(int argc, char** argv)
   moveit_msgs::CollisionObject collision_object;
   collision_object.header.frame_id = rightArm.getPlanningFrame();
   collision_object.id = "table";
-  shape_msgs::SolidPrimitive primitive = setPrim(3, 1.7, 4.0, 0.03);
-  geometry_msgs::Pose table_pose = setGeomPose(-1.0, 0, 0.95, 0.0, 1.0, 0.0, 0.0);
+  shape_msgs::SolidPrimitive primitive = setPrim(3, 1.7, 1.8, 0.03);
+  geometry_msgs::Pose table_pose = setGeomPose(-1.0, 0, 1.20, 0.0, 1.0, 0.0, 0.0);
   collision_object.primitives.push_back(primitive);
   collision_object.primitive_poses.push_back(table_pose);
   collision_object.operation = collision_object.ADD;
@@ -121,7 +123,7 @@ int main(int argc, char** argv)
   object_to_attach.header.frame_id = leftArm.getPlanningFrame();
   collision_object.id = "basket";
   primitive = setPrim(3, 0.07, 0.07, 0.07);
-  geometry_msgs::Pose basket_pose = setGeomPose(-0.631758, -1.03046, 1.00, 0.0, 0.0, 0.0, 1.0);
+  geometry_msgs::Pose basket_pose = setGeomPose(-0.631758, -0.5, 1.25, 0.0, 0.0, 0.0, 1.0);
   collision_object.primitives.push_back(primitive);
   collision_object.primitive_poses.push_back(basket_pose);
   collision_object.operation = collision_object.ADD;
@@ -131,7 +133,7 @@ int main(int argc, char** argv)
   object_to_attach.header.frame_id = rightArm.getPlanningFrame();
   object_to_attach.id = "block";
   primitive = setPrim(3, 0.07, 0.07, 0.07);
-  geometry_msgs::Pose block_pose = setGeomPose(-0.764824, 0.734106, 1.00, 0.0, 0.7071068, 0, 0.7071068);
+  geometry_msgs::Pose block_pose = setGeomPose(-0.764824, 0.5, 1.25, 0.0, 0.7071068, 0, 0.7071068);
   object_to_attach.primitives.push_back(primitive);
   object_to_attach.primitive_poses.push_back(block_pose);
   object_to_attach.operation = object_to_attach.ADD;
@@ -145,8 +147,8 @@ int main(int argc, char** argv)
 
   // 2. Place the right EE above the wood block
   geometry_msgs::Pose pre_grasp_pose = start_pose_right;
-  pre_grasp_pose.position = block_pose.position;
-  pre_grasp_pose.position.z += 0.2;
+  pre_grasp_pose = block_pose;
+  pre_grasp_pose.position.z += 0.1;
 
   rightArm.setApproximateJointValueTarget(pre_grasp_pose, "right_gripper_tool0");
   success = (rightArm.plan(my_plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
@@ -155,7 +157,7 @@ int main(int argc, char** argv)
   visual_tools.prompt("2. Press 'next' once the plan is complete and then it will move the arm");
   rightArm.move();
 
-  pre_grasp_pose.position.z -= 0.12;
+  pre_grasp_pose.position.z -= 0.03;
   rightArm.setApproximateJointValueTarget(pre_grasp_pose, "right_gripper_tool0");
   success = (rightArm.plan(my_plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
   visual_tools.trigger();
@@ -201,11 +203,8 @@ int main(int argc, char** argv)
   planning_scene_interface.removeCollisionObjects(object_ids);
 
   // 6. pick up both block and basket
-  current_pose_right = rightArm.getCurrentPose("right_gripper_tool0");
-  current_pose_left = leftArm.getCurrentPose("left_gripper_tool0");
-
-  geometry_msgs::Pose pose_right = current_pose_right.pose;
-  geometry_msgs::Pose pose_left = current_pose_left.pose;
+  geometry_msgs::Pose pose_right = rightArm.getCurrentPose("right_gripper_tool0").pose;
+  geometry_msgs::Pose pose_left = leftArm.getCurrentPose("left_gripper_tool0").pose;
 
   visual_tools.trigger();
   visual_tools.prompt("6. Press 'next' to pick up the objects");
@@ -258,7 +257,7 @@ int main(int argc, char** argv)
   visual_tools.prompt("8. Press 'next' to move left arm to the center of the robot");
   leftArm.move();
 
-  //move the block
+  // 8. move the block
   pose_right.position.z += 0.2;
   rightArm.setPoseTarget(pose_right);
   success = (rightArm.plan(my_plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS);

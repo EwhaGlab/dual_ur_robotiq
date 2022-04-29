@@ -1,5 +1,19 @@
 # Alpha Puzzle
 
+## Run the lines below in the respective terminals.
+```commandline
+roscore
+
+roslaunch dual_ur_robotiq_description upload_grippers.launch    
+roslaunch dual_ur_robotiq_description bringup_robot.launch    
+
+roslaunch robot_moveit_config robot_moveit_planning_execution.launch sim:=false     
+roslaunch robot_moveit_config moveit_rviz.launch config:=true   
+
+rosrun bimanual_manipulation alpha_puzzle
+```
+
+
 1. calculate the camera to base transformation
 2. find the grasp pose? or use pre-defined pose
 

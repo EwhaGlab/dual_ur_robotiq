@@ -19,14 +19,13 @@ geometry_msgs::Pose setGeomPose(float x, float y, float z, float ox, float oy, f
 
 int main(int argc, char** argv)
 {
-  ros::init(argc, argv, "pick_place_collision");
+  ros::init(argc, argv, "pick_place");
   ros::NodeHandle n;
   ros::AsyncSpinner spinner(1);
   spinner.start();
 
   ros::Publisher gripper_pub_left = n.advertise<std_msgs::Char>("left_gripper/gripper_left", 10);
   ros::Publisher gripper_pub_right = n.advertise<std_msgs::Char>("right_gripper/gripper_right", 10);
-
 
   static const std::string PLANNING_GROUP_ARM_RIGHT = "right_arm";
   static const std::string PLANNING_GROUP_ARM_LEFT = "left_arm";
@@ -36,6 +35,11 @@ int main(int argc, char** argv)
   moveit::planning_interface::PlanningSceneInterface planning_scene_interface;
 
   bool success;
+  std::vector<geometry_msgs::Pose> waypoints;
+  moveit_msgs::RobotTrajectory trajectory;
+  const double jump_threshold = 0.0; // 0.0
+  const double eef_step = 0.001; // 0.001
+  double fraction;
 
   namespace rvt = rviz_visual_tools;
   moveit_visual_tools::MoveItVisualTools visual_tools(rightArm.getPlanningFrame().c_str()); //here might be the problem?
@@ -71,7 +75,7 @@ int main(int argc, char** argv)
   gripper_pub_left.publish(gripper_msg_l);
   gripper_pub_right.publish(gripper_msg_r);
 
-  //0. test motion
+  //0. move to the start pose
   geometry_msgs::PoseStamped current_pose_left = leftArm.getCurrentPose("left_gripper_tool0");
   std::cout << std::endl <<"left pos: " << current_pose_left.pose.position.x << ", " << current_pose_left.pose.position.y << ", " << current_pose_left.pose.position.z << std::endl;
   std::cout <<"ori: " << current_pose_left.pose.orientation.x << ", " << current_pose_left.pose.orientation.y << ", " << current_pose_left.pose.orientation.z << ", " << current_pose_left.pose.orientation.w << std::endl;
@@ -81,6 +85,29 @@ int main(int argc, char** argv)
   std::cout <<"ori: " << current_pose_right.pose.orientation.x << ", " << current_pose_right.pose.orientation.y << ", " << current_pose_right.pose.orientation.z << ", " << current_pose_right.pose.orientation.w << std::endl;
 
   geometry_msgs::Pose start_pose_right = current_pose_right.pose;
+  geometry_msgs::Pose start_pose_left = current_pose_left.pose;
+/*
+  ///stroke
+  waypoints.push_back(start_pose_right);
+
+  start_pose_right.position.z += 0.2;
+  waypoints.push_back(start_pose_right);
+
+  start_pose_right.position.y += 0.2;
+  waypoints.push_back(start_pose_right);
+
+  start_pose_right.position.z -= 0.2;
+  waypoints.push_back(start_pose_right);
+
+  fraction = rightArm.computeCartesianPath(waypoints, eef_step, jump_threshold, trajectory); // loosen the eef_step as moving backward does not need precision
+  my_plan.trajectory_ = trajectory;
+
+  visual_tools.trigger();
+  visual_tools.prompt("000. Press 'next' to move the right arm close to the block");
+  rightArm.execute(my_plan);
+  if (fraction < 0.5) ROS_WARN_STREAM("MOVE FORWARD ERROR");
+*/
+/* test
   start_pose_right.position.z += 0.01;
   rightArm.setPoseTarget(start_pose_right);
   success = (rightArm.plan(my_plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
@@ -91,7 +118,7 @@ int main(int argc, char** argv)
   visual_tools.prompt("Press 'next' to test the right arm move");
   rightArm.move();
 
-  geometry_msgs::Pose start_pose_left = current_pose_left.pose;
+
   start_pose_left.position.z += 0.01;
   leftArm.setPoseTarget(start_pose_left);
   success = (leftArm.plan(my_plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
@@ -101,7 +128,7 @@ int main(int argc, char** argv)
   visual_tools.trigger();
   visual_tools.prompt("Press 'next' to test the left arm move");
   leftArm.move();
-
+*/
   // 1-2. Add Collision object
   ROS_INFO_NAMED("tutorial", "Add objects into the world");
   std::vector<moveit_msgs::CollisionObject> collision_objects;
@@ -109,29 +136,29 @@ int main(int argc, char** argv)
   moveit_msgs::CollisionObject collision_object;
   collision_object.header.frame_id = rightArm.getPlanningFrame();
   collision_object.id = "table";
-  shape_msgs::SolidPrimitive primitive = setPrim(3, 1.7, 4.0, 0.03);
-  geometry_msgs::Pose table_pose = setGeomPose(-1.0, 0, 0.95, 0.0, 1.0, 0.0, 0.0);
+  shape_msgs::SolidPrimitive primitive = setPrim(3, 1.7, 1.8, 0.03);
+  geometry_msgs::Pose table_pose = setGeomPose(-1.0, 0, 1.20, 0.0, 1.0, 0.0, 0.0);
   collision_object.primitives.push_back(primitive);
   collision_object.primitive_poses.push_back(table_pose);
   collision_object.operation = collision_object.ADD;
   collision_objects.push_back(collision_object);
 
-  // add basket
+  // left puzzle
   moveit_msgs::CollisionObject object_to_attach;
   object_to_attach.header.frame_id = leftArm.getPlanningFrame();
-  collision_object.id = "basket";
+  collision_object.id = "puzzle_l";
   primitive = setPrim(3, 0.07, 0.07, 0.07);
-  geometry_msgs::Pose basket_pose = setGeomPose(-0.631758, -1.03046, 1.00, 0.0, 0.0, 0.0, 1.0);
+  geometry_msgs::Pose basket_pose = setGeomPose(-0.817, -0.657238, 1.91814, 0.500034, -0.707083, 0, 0.5);
   collision_object.primitives.push_back(primitive);
   collision_object.primitive_poses.push_back(basket_pose);
   collision_object.operation = collision_object.ADD;
   collision_objects.push_back(collision_object);
 
-  // add block
+  // right puzzle
   object_to_attach.header.frame_id = rightArm.getPlanningFrame();
-  object_to_attach.id = "block";
+  object_to_attach.id = "puzzle_r";
   primitive = setPrim(3, 0.07, 0.07, 0.07);
-  geometry_msgs::Pose block_pose = setGeomPose(-0.764824, 0.734106, 1.00, 0.0, 0.7071068, 0, 0.7071068);
+  geometry_msgs::Pose block_pose = setGeomPose(-0.775057, 0.185174, 1.22591, -0.496286, 0.520416, 0.492851, 0.489862);
   object_to_attach.primitives.push_back(primitive);
   object_to_attach.primitive_poses.push_back(block_pose);
   object_to_attach.operation = object_to_attach.ADD;
@@ -144,9 +171,10 @@ int main(int argc, char** argv)
   visual_tools.prompt("1. Press 'next' in the RvizVisualToolsGui window to once the table appears in RViz");
 
   // 2. Place the right EE above the wood block
+  /*
   geometry_msgs::Pose pre_grasp_pose = start_pose_right;
-  pre_grasp_pose.position = block_pose.position;
-  pre_grasp_pose.position.z += 0.2;
+  pre_grasp_pose = block_pose;
+  pre_grasp_pose.position.z += 0.1;
 
   rightArm.setApproximateJointValueTarget(pre_grasp_pose, "right_gripper_tool0");
   success = (rightArm.plan(my_plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
@@ -155,19 +183,19 @@ int main(int argc, char** argv)
   visual_tools.prompt("2. Press 'next' once the plan is complete and then it will move the arm");
   rightArm.move();
 
-  pre_grasp_pose.position.z -= 0.12;
+  pre_grasp_pose.position.z -= 0.03;
   rightArm.setApproximateJointValueTarget(pre_grasp_pose, "right_gripper_tool0");
   success = (rightArm.plan(my_plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
   visual_tools.trigger();
   visual_tools.prompt("2-1. Press 'next' to move the right arm close to the block");
   rightArm.execute(my_plan);
-
+*/
   // 3. Close the right gripper
   visual_tools.trigger();
   visual_tools.prompt("3. Press 'next' to close the right gripper");
   gripper_msg_r.data = 'c';
   gripper_pub_right.publish(gripper_msg_r);
-
+/*
   // 4. Place the left EE above the basket
   geometry_msgs::Pose place_pose = start_pose_left;
   place_pose.position = basket_pose.position;
@@ -187,7 +215,7 @@ int main(int argc, char** argv)
   visual_tools.trigger();
   visual_tools.prompt("2-1. Press 'next' to move the left arm close to the block");
   leftArm.execute(my_plan);
-
+*/
   // 5. Close the left gripper
   visual_tools.trigger();
   visual_tools.prompt("5. Press 'next' to close the left gripper");
@@ -196,16 +224,13 @@ int main(int argc, char** argv)
 
   // 5-1. remove objects from the planning scene
   std::vector<std::string> object_ids;
-  object_ids.push_back("block");
-  object_ids.push_back("basket");
+  object_ids.push_back("puzzle_l");
+  object_ids.push_back("puzzle_r");
   planning_scene_interface.removeCollisionObjects(object_ids);
 
   // 6. pick up both block and basket
-  current_pose_right = rightArm.getCurrentPose("right_gripper_tool0");
-  current_pose_left = leftArm.getCurrentPose("left_gripper_tool0");
-
-  geometry_msgs::Pose pose_right = current_pose_right.pose;
-  geometry_msgs::Pose pose_left = current_pose_left.pose;
+  geometry_msgs::Pose pose_right = rightArm.getCurrentPose("right_gripper_tool0").pose;
+  geometry_msgs::Pose pose_left = leftArm.getCurrentPose("left_gripper_tool0").pose;
 
   visual_tools.trigger();
   visual_tools.prompt("6. Press 'next' to pick up the objects");

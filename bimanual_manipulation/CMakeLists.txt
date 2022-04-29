@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0.2)
-project(pick_place)
+project(bimanual_manipulation)
 
 find_package(catkin REQUIRED
   COMPONENTS
@@ -47,11 +47,14 @@ catkin_package(
 include_directories(SYSTEM ${catkin_INCLUDE_DIRS} ${Boost_INCLUDE_DIR} ${EIGEN3_INCLUDE_DIRS})
 
 
-add_executable(pick_place_collision src/pick_place_collision.cpp)
-target_link_libraries(pick_place_collision ${catkin_LIBRARIES} ${Boost_LIBRARIES})
+add_executable(pick_place src/pick_place.cpp)
+target_link_libraries(pick_place ${catkin_LIBRARIES} ${Boost_LIBRARIES})
 
-#install(TARGETS pick_and_place DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
-#install(TARGETS pick_and_place_collision DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
+add_executable(alpha_puzzle src/alpha_puzzle.cpp)
+target_link_libraries(alpha_puzzle ${catkin_LIBRARIES} ${Boost_LIBRARIES})
+
+#install(TARGETS alpha_puzzle DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
+#install(TARGETS pick_place DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
 #install(TARGETS pick_and_place_collision_depth_camera DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
 
 #install(DIRECTORY launch DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})

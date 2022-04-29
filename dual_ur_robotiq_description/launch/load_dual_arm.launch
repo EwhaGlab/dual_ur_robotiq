@@ -1,10 +1,16 @@
 <?xml version="1.0"?>
 <launch>
   <!--ur parameters files -->
+
+  <arg name="joint_limit_params" default="$(find ur_robot_driver)/config/ur5e_joint_limits.yaml"/>
+  <arg name="kinematics_params" default="$(find ur_robot_driver)/config/ur5e_default_kinematics.yaml"/>
+  <arg name="physical_params" default="$(find ur_robot_driver)/config/ur5e_physical_parameters.yaml"/>
+  <arg name="visual_params" default="$(find ur_robot_driver)/config/ur5e_visual_parameters.yaml"/>
+  <!--
   <arg name="joint_limit_params" default="$(find ur_description)/config/ur5e/joint_limits.yaml"/>
   <arg name="kinematics_params" default="$(find ur_description)/config/ur5e/default_kinematics.yaml"/>
   <arg name="physical_params" default="$(find ur_description)/config/ur5e/physical_parameters.yaml"/>
-  <arg name="visual_params" default="$(find ur_description)/config/ur5e/visual_parameters.yaml"/>
+  <arg name="visual_params" default="$(find ur_description)/config/ur5e/visual_parameters.yaml"/>-->
   <!--common parameters -->
   <arg name="transmission_hw_interface" default="hardware_interface/PositionJointInterface" />
   <arg name="safety_limits" default="false" doc="If True, enable the safety limits controller"/>

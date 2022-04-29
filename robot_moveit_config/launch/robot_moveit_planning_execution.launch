@@ -17,4 +17,6 @@
     </include>
   </group>
 
+  <node pkg="tf" type="static_transform_publisher" name="link1_broadcaster" args="-0.1 0 1.4 0 0 1 0 stand camera_link 100" />
+
 </launch>

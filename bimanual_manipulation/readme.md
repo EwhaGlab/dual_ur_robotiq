@@ -1,6 +1,6 @@
-# Bimanual Pick and Place
+# Bimanual Alpha Puzzle Solving
 
-Pick and place using predefined pose of table, basket, and block.
+SoAlpha puzzle
 
 ![untitled](https://user-images.githubusercontent.com/6389003/157580914-40a7b143-b38b-4920-bb58-b447c7ec6d39.gif)
 

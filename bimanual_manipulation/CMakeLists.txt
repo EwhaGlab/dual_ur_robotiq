@@ -20,6 +20,7 @@ find_package(catkin REQUIRED
     tf2_geometry_msgs
     actionlib_msgs
     control_msgs
+    ar_track_alvar
 )
 
 find_package(Eigen3 REQUIRED)
@@ -53,8 +54,12 @@ target_link_libraries(pick_place ${catkin_LIBRARIES} ${Boost_LIBRARIES})
 add_executable(alpha_puzzle src/alpha_puzzle.cpp)
 target_link_libraries(alpha_puzzle ${catkin_LIBRARIES} ${Boost_LIBRARIES})
 
+add_executable(camera_pose_estimate src/camera_pose_estimate.cpp)
+target_link_libraries(camera_pose_estimate ${catkin_LIBRARIES} ${Boost_LIBRARIES})
+
 #install(TARGETS alpha_puzzle DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
 #install(TARGETS pick_place DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
 #install(TARGETS pick_and_place_collision_depth_camera DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
+#install(TARGETS camera_pose_estimate DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
 
 #install(DIRECTORY launch DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})

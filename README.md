@@ -7,7 +7,7 @@ This repository provides our customized UR5e integration with robotiq 3 Finger a
 
 The project was developed and tested with the following system:
 
-Ubuntu 18.04
+Ubuntu 18.04    
 ROS Melodic
 <!--
 UR5e system version 4.2.1

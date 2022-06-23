@@ -2,7 +2,7 @@
 
 This repository provides our customized UR5e integration with robotiq 3 Finger adaptive gripper.  
 
-![real_robot](https://user-images.githubusercontent.com/6389003/141102453-e75c4ded-fe8f-4a26-9d55-d97c1e357f7d.JPG =250x)
+![real_robot](https://user-images.githubusercontent.com/6389003/141102453-e75c4ded-fe8f-4a26-9d55-d97c1e357f7d.JPG){ width=50% }
 
 
 The project was developed and tested with the following system:

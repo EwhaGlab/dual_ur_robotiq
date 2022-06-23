@@ -2,13 +2,13 @@
 
 This repository provides our customized UR5e integration with robotiq 3 Finger adaptive gripper.  
 
-![real_robot](https://user-images.githubusercontent.com/6389003/141102453-e75c4ded-fe8f-4a26-9d55-d97c1e357f7d.JPG)
+![real_robot](https://user-images.githubusercontent.com/6389003/141102453-e75c4ded-fe8f-4a26-9d55-d97c1e357f7d.JPG =250x)
 
 
 The project was developed and tested with the following system:
 
-Ubuntu 18.04    
-ROS Melodic
+- Ubuntu 18.04    
+- ROS Melodic
 <!--
 UR5e system version 4.2.1
 -->

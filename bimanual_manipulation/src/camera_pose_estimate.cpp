@@ -8,7 +8,6 @@
 // ??. locate the camera using the publisher like below
 // rosrun tf2_ros static_transform_publisher 0 0 0 0 0 0 1 /world /camera_link
 
-
 #include <ros/ros.h>
 #include <std_msgs/Char.h>
 
@@ -32,7 +31,6 @@
 
 shape_msgs::SolidPrimitive setPrim(int d, float x, float y, float z);
 geometry_msgs::Pose setGeomPose(float x, float y, float z, float ox, float oy, float oz, float ow);
-//void planFromCurrentPose(moveit::planning_interface::MoveGroupInterface *arm, moveit::planning_interface::MoveGroupInterface::Plan plan, moveit_visual_tools::MoveItVisualTools visual_tools, float px, float py, float pz, float ox, float oy, float oz, float ow);
 
 // TODO: calculate camera-robot transformation matrix
 void arMarkersCallback(ar_track_alvar_msgs::AlvarMarkers req)
@@ -101,7 +99,6 @@ int main(int argc, char** argv)
   visual_tools.prompt("Press 'next' in the RvizVisualToolsGui window to start the demo");
 
   //activate left and right grippers
-
   gripper_msg_l.data = 'r'; // reset
   gripper_msg_r.data = 'r'; // reset
   gripper_pub_left.publish(gripper_msg_l);

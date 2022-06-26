@@ -31,7 +31,7 @@
 shape_msgs::SolidPrimitive setPrim(int d, float x, float y, float z);
 geometry_msgs::Pose setGeomPose(float x, float y, float z, float ox, float oy, float oz, float ow);
 
-// TODO: calculate camera-robot transformation matrix
+// TODO: 4. calculate camera-robot transformation
 void arMarkersCallback(ar_track_alvar_msgs::AlvarMarkers req)
 {
     if (!req.markers.empty()) {
@@ -77,7 +77,8 @@ int main(int argc, char** argv)
   moveit_visual_tools::MoveItVisualTools visual_tools(rightArm.getPlanningFrame().c_str());
   visual_tools.deleteAllMarkers();
   visual_tools.loadRemoteControl();
-
+  
+  //TODO: 4. calculate camera-robot transformation
   //ros::Subscriber sub_marker = n.subscribe("/ar_pose_marker", 100, arMarkersCallback);
 
   // RViz provides many types of markers, in this demo we will use text, cylinders, and spheres
@@ -119,7 +120,6 @@ int main(int argc, char** argv)
   gripper_pub_right.publish(gripper_msg_r);
 
   //0. test motion
-
   geometry_msgs::PoseStamped current_pose_left = leftArm.getCurrentPose("left_gripper_tool0");
   /*std::cout << std::endl <<"left pos: " << current_pose_left.pose.position.x << ", " << current_pose_left.pose.position.y << ", " << current_pose_left.pose.position.z << std::endl;
   std::cout <<"ori: " << current_pose_left.pose.orientation.x << ", " << current_pose_left.pose.orientation.y << ", " << current_pose_left.pose.orientation.z << ", " << current_pose_left.pose.orientation.w << std::endl;
@@ -348,8 +348,8 @@ int main(int argc, char** argv)
   //마커 하나의 rpy로 일단 각도 먼저 잡는다.
 
   //TODO: subscribe marker pose
-  //TODO: calculate camera to robot base transformation
-  //TODO: save the transformation to txt file
+  //TODO: 4. calculate camera to robot base
+  //TODO: 5. save the transformation to txt file
 
 /*
   // 2. move the left marker block
@@ -386,10 +386,10 @@ int main(int argc, char** argv)
   visual_tools.prompt("Press 'next' once the plan is complete and then it will move the arm");
   rightArm.move();
 
-  //subscribe marker pose
-  // 4. calculate the world-camera transformation matrix
+  // TODO: 4. calculate the world-camera transformation matrix -> from the subscriber callback function
     
-  // 5. save the transformation matrix as txt file
+  // TODO: 5. save the transformation as txt file
+    
   file << "";
   file.close();
 

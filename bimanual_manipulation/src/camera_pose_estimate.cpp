@@ -4,7 +4,6 @@
 // 4. calculate the world-camera transformation matrix
 // 5. save the transformation matrix as txt file
 
-
 // ??. locate the camera using the publisher like below
 // rosrun tf2_ros static_transform_publisher 0 0 0 0 0 0 1 /world /camera_link
 
@@ -197,7 +196,7 @@ int main(int argc, char** argv)
   right_goal_pose = right_block_pose;
   left_goal_pose = left_block_pose;
 
-  // 2-1. grasp the right marker block
+  // 1-1. grasp the right marker block
   right_goal_pose.position.z += 0.1;
   rightArm.setApproximateJointValueTarget(right_goal_pose, "right_gripper_tool0");
   success = (rightArm.plan(my_plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
@@ -219,7 +218,7 @@ int main(int argc, char** argv)
   gripper_pub_right.publish(gripper_msg_r);
 
 /*
-  // 2-2. grasp the left marker block
+  // 1-2. grasp the left marker block
   left_goal_pose.position.z += 0.1;
   leftArm.setApproximateJointValueTarget(left_goal_pose, "left_gripper_tool0");
   success = (leftArm.plan(my_plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
@@ -241,13 +240,13 @@ int main(int argc, char** argv)
   gripper_msg_l.data = 'c';
   gripper_pub_left.publish(gripper_msg_l);
 */
-  // 2-3. remove objects from the planning scene
+  // 1-3. remove objects from the planning scene
   std::vector<std::string> object_ids;
   object_ids.push_back("left_block");
   object_ids.push_back("right_block");
   planning_scene_interface.removeCollisionObjects(object_ids);
 
-  // 2-4. pick up the marker blocks
+  // 2-1. pick up the marker blocks
   right_goal_pose = rightArm.getCurrentPose("right_gripper_tool0").pose;
   right_goal_pose.position.z += 0.03;
   rightArm.setApproximateJointValueTarget(right_goal_pose, "right_gripper_tool0");
@@ -265,10 +264,8 @@ int main(int argc, char** argv)
   leftArm.execute(my_plan);
 
 
-  // 2. move the left marker block
+  // 2-2. move the left marker block
   //planFromCurrentPose(leftArm, my_plan, visual_tools, 10.0, 10.0, 2.0, 10.0, 10.0, 10.0, 10.0);
-
-
 
   left_goal_pose.position.x = -0.38;
   left_goal_pose.position.y = -0.2;
@@ -291,7 +288,7 @@ int main(int argc, char** argv)
   visual_tools.prompt("8. Press 'next' to move left arm to the center of the robot");
   leftArm.move();
 */
-  // 8. move the right marker block
+  // 2-3. move the right marker block
   right_goal_pose.position.x = -0.38;
   right_goal_pose.position.y = 0.2;
   right_goal_pose.position.z = 1.86;
@@ -390,8 +387,9 @@ int main(int argc, char** argv)
   rightArm.move();
 
   //subscribe marker pose
-
-
+  // 4. calculate the world-camera transformation matrix
+    
+  // 5. save the transformation matrix as txt file
   file << "";
   file.close();
 

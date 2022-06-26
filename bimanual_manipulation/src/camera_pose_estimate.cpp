@@ -1,4 +1,3 @@
-
 // 1. grasp the marker blocks
 // 2. move the block and track the marker
 // 3. move the block again and track the marker
@@ -49,7 +48,7 @@ void arMarkersCallback(ar_track_alvar_msgs::AlvarMarkers req)
       // roll  --> rotate around vertical axis
       // pitch --> rotate around horizontal axis
       // yaw   --> rotate around depth axis
-    } // if
+    }
 }
 
 int main(int argc, char** argv)
@@ -82,7 +81,7 @@ int main(int argc, char** argv)
   visual_tools.deleteAllMarkers();
   visual_tools.loadRemoteControl();
 
-//  ros::Subscriber sub_marker = n.subscribe("/ar_pose_marker", 100, arMarkersCallback);
+  //ros::Subscriber sub_marker = n.subscribe("/ar_pose_marker", 100, arMarkersCallback);
 
   // RViz provides many types of markers, in this demo we will use text, cylinders, and spheres
   Eigen::Isometry3d text_pose = Eigen::Isometry3d::Identity();

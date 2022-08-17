@@ -20,8 +20,7 @@ roslaunch bimanual_manipulation cam_ar_track.launch
 rosrun bimanual_manipulation camera_pose_estimate
 ```
 
-```
- 
- 
+## Write the transformation file and fix the transfromation below
+``` 
 rosrun tf2_ros static_transform_publisher 0 0 0 0 0 0 1 /world /camera_link
 ```

@@ -1,14 +1,11 @@
-
 // 1. grasp the marker blocks
 // 2. move the block and track the marker
 // 3. move the block again and track the marker
 // 4. calculate the world-camera transformation matrix
 // 5. save the transformation matrix as txt file
 
-
 // ??. locate the camera using the publisher like below
 // rosrun tf2_ros static_transform_publisher 0 0 0 0 0 0 1 /world /camera_link
-
 
 #include <ros/ros.h>
 #include <std_msgs/Char.h>
@@ -33,9 +30,8 @@
 
 shape_msgs::SolidPrimitive setPrim(int d, float x, float y, float z);
 geometry_msgs::Pose setGeomPose(float x, float y, float z, float ox, float oy, float oz, float ow);
-//void planFromCurrentPose(moveit::planning_interface::MoveGroupInterface *arm, moveit::planning_interface::MoveGroupInterface::Plan plan, moveit_visual_tools::MoveItVisualTools visual_tools, float px, float py, float pz, float ox, float oy, float oz, float ow);
 
-// TODO: calculate camera-robot transformation matrix
+// TODO: 4. calculate camera-robot transformation
 void arMarkersCallback(ar_track_alvar_msgs::AlvarMarkers req)
 {
     if (!req.markers.empty()) {
@@ -49,7 +45,7 @@ void arMarkersCallback(ar_track_alvar_msgs::AlvarMarkers req)
       // roll  --> rotate around vertical axis
       // pitch --> rotate around horizontal axis
       // yaw   --> rotate around depth axis
-    } // if
+    }
 }
 
 int main(int argc, char** argv)
@@ -81,8 +77,9 @@ int main(int argc, char** argv)
   moveit_visual_tools::MoveItVisualTools visual_tools(rightArm.getPlanningFrame().c_str());
   visual_tools.deleteAllMarkers();
   visual_tools.loadRemoteControl();
-
-//  ros::Subscriber sub_marker = n.subscribe("/ar_pose_marker", 100, arMarkersCallback);
+  
+  //TODO: 4. calculate camera-robot transformation
+  //ros::Subscriber sub_marker = n.subscribe("/ar_pose_marker", 100, arMarkersCallback);
 
   // RViz provides many types of markers, in this demo we will use text, cylinders, and spheres
   Eigen::Isometry3d text_pose = Eigen::Isometry3d::Identity();
@@ -102,7 +99,6 @@ int main(int argc, char** argv)
   visual_tools.prompt("Press 'next' in the RvizVisualToolsGui window to start the demo");
 
   //activate left and right grippers
-
   gripper_msg_l.data = 'r'; // reset
   gripper_msg_r.data = 'r'; // reset
   gripper_pub_left.publish(gripper_msg_l);
@@ -124,7 +120,6 @@ int main(int argc, char** argv)
   gripper_pub_right.publish(gripper_msg_r);
 
   //0. test motion
-
   geometry_msgs::PoseStamped current_pose_left = leftArm.getCurrentPose("left_gripper_tool0");
   /*std::cout << std::endl <<"left pos: " << current_pose_left.pose.position.x << ", " << current_pose_left.pose.position.y << ", " << current_pose_left.pose.position.z << std::endl;
   std::cout <<"ori: " << current_pose_left.pose.orientation.x << ", " << current_pose_left.pose.orientation.y << ", " << current_pose_left.pose.orientation.z << ", " << current_pose_left.pose.orientation.w << std::endl;
@@ -201,7 +196,7 @@ int main(int argc, char** argv)
   right_goal_pose = right_block_pose;
   left_goal_pose = left_block_pose;
 
-  // 2-1. grasp the right marker block
+  // 1-1. grasp the right marker block
   right_goal_pose.position.z += 0.1;
   rightArm.setApproximateJointValueTarget(right_goal_pose, "right_gripper_tool0");
   success = (rightArm.plan(my_plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
@@ -223,7 +218,7 @@ int main(int argc, char** argv)
   gripper_pub_right.publish(gripper_msg_r);
 
 /*
-  // 2-2. grasp the left marker block
+  // 1-2. grasp the left marker block
   left_goal_pose.position.z += 0.1;
   leftArm.setApproximateJointValueTarget(left_goal_pose, "left_gripper_tool0");
   success = (leftArm.plan(my_plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
@@ -245,13 +240,13 @@ int main(int argc, char** argv)
   gripper_msg_l.data = 'c';
   gripper_pub_left.publish(gripper_msg_l);
 */
-  // 2-3. remove objects from the planning scene
+  // 1-3. remove objects from the planning scene
   std::vector<std::string> object_ids;
   object_ids.push_back("left_block");
   object_ids.push_back("right_block");
   planning_scene_interface.removeCollisionObjects(object_ids);
 
-  // 2-4. pick up the marker blocks
+  // 2-1. pick up the marker blocks
   right_goal_pose = rightArm.getCurrentPose("right_gripper_tool0").pose;
   right_goal_pose.position.z += 0.03;
   rightArm.setApproximateJointValueTarget(right_goal_pose, "right_gripper_tool0");
@@ -269,10 +264,8 @@ int main(int argc, char** argv)
   leftArm.execute(my_plan);
 
 
-  // 2. move the left marker block
+  // 2-2. move the left marker block
   //planFromCurrentPose(leftArm, my_plan, visual_tools, 10.0, 10.0, 2.0, 10.0, 10.0, 10.0, 10.0);
-
-
 
   left_goal_pose.position.x = -0.38;
   left_goal_pose.position.y = -0.2;
@@ -295,7 +288,7 @@ int main(int argc, char** argv)
   visual_tools.prompt("8. Press 'next' to move left arm to the center of the robot");
   leftArm.move();
 */
-  // 8. move the right marker block
+  // 2-3. move the right marker block
   right_goal_pose.position.x = -0.38;
   right_goal_pose.position.y = 0.2;
   right_goal_pose.position.z = 1.86;
@@ -355,8 +348,8 @@ int main(int argc, char** argv)
   //마커 하나의 rpy로 일단 각도 먼저 잡는다.
 
   //TODO: subscribe marker pose
-  //TODO: calculate camera to robot base transformation
-  //TODO: save the transformation to txt file
+  //TODO: 4. calculate camera to robot base
+  //TODO: 5. save the transformation to txt file
 
 /*
   // 2. move the left marker block
@@ -393,9 +386,10 @@ int main(int argc, char** argv)
   visual_tools.prompt("Press 'next' once the plan is complete and then it will move the arm");
   rightArm.move();
 
-  //subscribe marker pose
-
-
+  // TODO: 4. calculate the world-camera transformation matrix -> from the subscriber callback function
+    
+  // TODO: 5. save the transformation as txt file
+    
   file << "";
   file.close();
 

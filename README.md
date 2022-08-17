@@ -4,7 +4,14 @@ This repository provides our customized UR5e integration with robotiq 3 Finger a
 
 ![real_robot](https://user-images.githubusercontent.com/6389003/141102453-e75c4ded-fe8f-4a26-9d55-d97c1e357f7d.JPG)
 
-Tested on Ubuntu 18.04 with ROS Melodic.
+
+The project was developed and tested with the following system:
+
+- Ubuntu 18.04    
+- ROS Melodic
+<!--
+UR5e system version 4.2.1
+-->
 
 ### The features and usage of this driver are described on the [WIKI](https://github.com/yaesolKim/dual_ur5e/wiki).   
 

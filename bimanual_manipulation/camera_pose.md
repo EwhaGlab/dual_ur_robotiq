@@ -20,7 +20,28 @@ roslaunch bimanual_manipulation cam_ar_track.launch
 rosrun bimanual_manipulation camera_pose_estimate
 ```
 
-## Write the transformation file and fix the transfromation below
-``` 
+```
+// TODO
 rosrun tf2_ros static_transform_publisher 0 0 0 0 0 0 1 /world /camera_link
 ```
+
+### Simple Gripper Command
+Run the gripper controller
+```commandline
+roscore
+roslaunch dual_ur_robotiq_description upload_grippers.launch 
+```
+
+- Always activate the gripper first
+    ```commandline
+    rostopic pub /right_gripper/gripper_right std_msgs/Char "data: 97"
+    ```
+  Sending the character `a` in integer.
+
+
+- Gripper Open and Close
+  ```commandline
+  rostopic pub /right_gripper/gripper_right std_msgs/Char "data: 111"
+  rostopic pub /right_gripper/gripper_right std_msgs/Char "data: 99"
+  ```
+  Sending `o` and `c` for opening and closing respectively. 

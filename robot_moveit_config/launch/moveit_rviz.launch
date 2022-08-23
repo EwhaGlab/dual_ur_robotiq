@@ -5,7 +5,7 @@
   <arg     if="$(arg debug)" name="launch_prefix" value="gdb --ex run --args" />
 
   <arg name="rviz_config" default="" />
-  <arg     if="$(eval rviz_config=='')" name="command_args" value="-d $(find pick_place)/src/default.rviz" />
+  <arg     if="$(eval rviz_config=='')" name="command_args" value="-d $(find bimanual_manipulation)/src/default.rviz" />
   <arg unless="$(eval rviz_config=='')" name="command_args" value="-d $(arg rviz_config)" />
 
   <node name="$(anon rviz)" launch-prefix="$(arg launch_prefix)" pkg="rviz" type="rviz" respawn="false"

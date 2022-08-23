@@ -12,13 +12,13 @@ Tested on Ubuntu 18.04 with ROS Melodic.
 ## Robot simulation
 ### Run gazebo, moveit, Rviz   
 ```
-roslaunch robot_gazebo dual_ur_robotiq.launch
+roslaunch robot_gazebo dual_ur_robotiq.launch world:=table_box
 roslaunch robot_moveit_config robot_moveit_planning_execution.launch sim:=true
-roslaunch robot_moveit_config moveit_rviz.launch config:=true
+roslaunch robot_moveit_config moveit_rviz.launch 
 ```   
 ### Pick and place simulation
 ```commandline
-rosrun pick_place pick_place_collision
+rosrun bimanual_manipulation pick_place_collision
 ```
 
 ## Real robot execution: Bring up grippers and robots, Run moveit and Rviz   
@@ -32,7 +32,7 @@ roslaunch robotiq_3f_gripper_visualization robotiq_gripper_upload.launch
 
 roslaunch ur_robot_driver robot_bringup.launch   
 roslaunch robot_moveit_config robot_moveit_planning_execution.launch sim:=false     
-roslaunch robot_moveit_config moveit_rviz.launch config:=true   
+roslaunch robot_moveit_config moveit_rviz.launch   
 ```
 
 ## Gripper 

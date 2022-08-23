@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>pick_place</name>
+  <name>bimanual_manipulation</name>
   <version>0.0.0</version>
-  <description>The pick_place package</description>
+  <description>The bimanual_manipulation package</description>
 
   <!-- One maintainer tag required, multiple allowed, one person per tag -->
   <!-- Example:  -->

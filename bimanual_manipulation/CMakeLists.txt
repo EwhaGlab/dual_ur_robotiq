@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0.2)
-project(pick_place)
+project(bimanual_manipulation)
 
 find_package(catkin REQUIRED
   COMPONENTS
@@ -51,6 +51,9 @@ target_link_libraries(pick_place_no_collision ${catkin_LIBRARIES} ${Boost_LIBRAR
 
 add_executable(pick_place_collision src/pick_place_collision.cpp)
 target_link_libraries(pick_place_collision ${catkin_LIBRARIES} ${Boost_LIBRARIES})
+
+add_executable(bimanual_manipulation_demo src/bimanual_manipulation_demo.cpp)
+target_link_libraries(bimanual_manipulation_demo ${catkin_LIBRARIES} ${Boost_LIBRARIES})
 
 #install(TARGETS pick_and_place DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
 #install(TARGETS pick_and_place_collision DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})

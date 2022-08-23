@@ -72,6 +72,10 @@
         <joint name="left_wrist_2_joint" value="0" />
         <joint name="left_wrist_3_joint" value="0" />
     </group_state>
+    <group name="arms">
+        <group name="right_arm"/>
+        <group name="left_arm"/>
+    </group>
 
     <!--END EFFECTOR: Purpose: Represent information about an end effector.-->
     <end_effector name="right_gripper_tool0" parent_link="right_gripper_tool0" group="right_arm" />

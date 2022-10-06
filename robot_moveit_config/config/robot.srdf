@@ -27,6 +27,10 @@
         <joint name="left_wrist_3_joint" />
         <chain base_link="left_base_link" tip_link="left_gripper_tool0" />
     </group>
+    <group name="arms">
+        <group name="right_arm" />
+        <group name="left_arm" />
+    </group>
     <group name="left_gripper">
         <joint name="left_palm_finger_1_joint" />
         <joint name="left_finger_1_joint_1" />

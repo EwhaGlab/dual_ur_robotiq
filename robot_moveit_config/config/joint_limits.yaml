@@ -74,17 +74,17 @@ joint_limits:
     max_acceleration: 0
   left_wrist_1_joint:
     has_velocity_limits: true
-    max_velocity: 6.28
+    max_velocity: 3.14
     has_acceleration_limits: false
     max_acceleration: 0
   left_wrist_2_joint:
     has_velocity_limits: true
-    max_velocity: 6.28
+    max_velocity: 3.14
     has_acceleration_limits: false
     max_acceleration: 0
   left_wrist_3_joint:
     has_velocity_limits: true
-    max_velocity: 6.28
+    max_velocity: 3.14
     has_acceleration_limits: false
     max_acceleration: 0
   right_elbow_joint:
@@ -159,16 +159,16 @@ joint_limits:
     max_acceleration: 0
   right_wrist_1_joint:
     has_velocity_limits: true
-    max_velocity: 6.28
+    max_velocity: 3.14
     has_acceleration_limits: false
     max_acceleration: 0
   right_wrist_2_joint:
     has_velocity_limits: true
-    max_velocity: 6.28
+    max_velocity: 3.14
     has_acceleration_limits: false
     max_acceleration: 0
   right_wrist_3_joint:
     has_velocity_limits: true
-    max_velocity: 6.28
+    max_velocity: 3.14
     has_acceleration_limits: false
     max_acceleration: 0

@@ -23,8 +23,15 @@
   <node pkg="tf" type="static_transform_publisher" name="link1_broadcaster" args="0.0 0.0 0.0 0 0 1 0 stand camera_link 100" />
 
   <node pkg="tf" type="static_transform_publisher" name="link1_broadcaster" args="0.0 0.0 0.0 0.5 -0.7071068 0.0 0.5 stand camera_link 100" />
-  -->
+    -->
 
-  <node pkg="tf" type="static_transform_publisher" name="link1_broadcaster" args="0.0 0.0 0.0        0 0 1 0      stand camera_link 100" />
+
+<!--  <node pkg="tf" type="static_transform_publisher" name="link1_broadcaster" args="0 0 0 0 0 0 1 stand camera_link 100" />-->
+<!--  <node pkg="tf" type="static_transform_publisher" name="link1_broadcaster" args="0 0 0 0 0 0 1 right_base camera_link 100" />-->
+
+
+  <node pkg="tf2_ros" type="static_transform_publisher" name="camera_link_broadcaster"
+        args="-0.0740793 -0.0908153 1.90322   -0.336645 0.0159055 0.941282 -0.020123 stand camera_link" />
+
 
 </launch>

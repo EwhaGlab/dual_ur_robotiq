@@ -189,7 +189,7 @@ int main(int argc, char** argv)
   // setJointValue Target both arms at once using saved joint names
   //-----------------------------------------------------------
   ROS_INFO("----------------------------------------------");
-  ROS_INFO("Method 2-5: Commanding with joint values");
+  ROS_INFO("Method 1-5: Commanding with joint values");
   ROS_INFO("setJointValue Target arm by arm using saved joint names");
 
   arms.setStartStateToCurrentState();

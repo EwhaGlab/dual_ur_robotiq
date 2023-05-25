@@ -40,6 +40,13 @@ roslaunch robot_moveit_config robot_moveit_planning_execution.launch sim:=false
 roslaunch robot_moveit_config moveit_rviz.launch config:=true   
 ```
 
+### [Optional] Quick gripper activation
+```commandline
+rosrun robotiq_3f_gripper_control Robotiq3FGripperSimpleController.py __ns:=/right_gripper
+rosrun robotiq_3f_gripper_control Robotiq3FGripperSimpleController.py __ns:=/left_gripper   
+```
+Press `a` for the activation. 
+
 <!--
 To control the left/right arm separately, use the command below. 
 ```commandline

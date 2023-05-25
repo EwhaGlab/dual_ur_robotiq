@@ -27,7 +27,7 @@ find_package(Eigen3 REQUIRED)
 find_package(Boost REQUIRED system filesystem date_time thread)
 
 generate_messages(
-  DEPENDENCIES actionlib_msgs std_msgs trajectory_msgs control_msgs  # Or other packages containing msgs
+  DEPENDENCIES actionlib_msgs std_msgs trajectory_msgs control_msgs geometry_msgs # Or other packages containing msgs
 )
 
 catkin_package(
@@ -41,12 +41,15 @@ catkin_package(
     tf2_geometry_msgs
     actionlib_msgs
     control_msgs
+    # message_runtime
   DEPENDS
     EIGEN3
 )
 
 include_directories(SYSTEM ${catkin_INCLUDE_DIRS} ${Boost_INCLUDE_DIR} ${EIGEN3_INCLUDE_DIRS})
 
+add_executable(command_robot src/command_robot_example.cpp)
+target_link_libraries(command_robot ${catkin_LIBRARIES} ${Boost_LIBRARIES})
 
 add_executable(pick_place src/pick_place.cpp)
 target_link_libraries(pick_place ${catkin_LIBRARIES} ${Boost_LIBRARIES})
